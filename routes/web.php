@@ -47,6 +47,6 @@ Route::get('productCreate', [ProductController::class, 'productCreate'])->name('
 Route::post('productStore', [ProductController::class, 'productStore'])->name('product.store');
 
 //pay pal credential
-Route::get('handle-payment',[PaypalController::class,'handlePayment'])->name('make.payment');
+Route::get('handle-payment/{total_amount_price}',[PaypalController::class,'handlePayment'])->name('make.payment');
 Route::get('payment-success',[PaypalController::class,'paymentSuccess'])->name('payment.success');
 Route::get('payment-failed',[PaypalController::class,'paymentFailed'])->name('payment.failed');

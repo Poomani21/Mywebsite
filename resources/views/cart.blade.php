@@ -81,7 +81,11 @@
                             @csrf
                             <button class="px-6 py-2 text-red-800 bg-red-300">Remove All Cart</button>                            
                           </form>
-                          <a class="btn btn-primary" href="{{route('make.payment')}}">Pay ${{ Cart::getTotal()}} via Paypal</a>
+                          @php 
+                          $total_amount_price=Cart::getTotal();
+                          @endphp
+                          <input type="hidden"  name="total_amount_price" value="{{$total_amount_price}}">
+                          <a class="btn btn-primary" href="{{route('make.payment',$total_amount_price)}}">Pay ${{ Cart::getTotal()}} via Paypal</a>
 
                         </div>
 

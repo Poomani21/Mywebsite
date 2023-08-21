@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Illuminate\Support\Facades\Redirect;
@@ -15,7 +16,12 @@ class PaypalController extends Controller
         $this->provider->getAccessToken();
     }
 
-    public function handlePayment(){
+    public function handlePayment(Request $request,$total_amount_price){
+
+    
+        $total_amount_price=sprintf("%.2f", $total_amount_price);
+        // dd($total_amount_price);
+
         $order['intent'] = 'CAPTURE';
 
         $purchase_units = [];
@@ -27,7 +33,7 @@ class PaypalController extends Controller
                     'quantity'=>1,
                     'unit_amount'=>[
                         'currency_code'=>'USD',
-                        'value'=>'50.00'
+                        'value'=>'300.00'
                     ]
                 ],
                 [
@@ -35,17 +41,17 @@ class PaypalController extends Controller
                     'quantity'=>1,
                     'unit_amount'=>[
                         'currency_code'=>'USD',
-                        'value'=>'50.00'
+                        'value'=>'58.00'
                     ]
                 ],
             ],
             'amount'=>[
                 'currency_code'=>'USD',
-                'value'=>'100.00',
+                'value'=>$total_amount_price,
                 'breakdown'=>[
                     'item_total'=>[
                         'currency_code'=>'USD',
-                        'value'=>'100.00'
+                        'value'=>$total_amount_price
                     ],
                 ]
             ]
