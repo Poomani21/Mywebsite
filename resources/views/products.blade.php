@@ -1,35 +1,43 @@
-@extends('layouts.frontend')
+@extends('admin.layout.app')
 
 @section('content')
-    <div class="container px-6 mx-auto">
-        <h3 class="text-2xl font-medium text-gray-700">Product List</h3>
-        <div class="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            @foreach ($products as $product)
-            <div class="w-full max-w-sm mx-auto overflow-hidden rounded-md shadow-md">
-                <!-- <img src="{{ url($product->image) }}" alt="" class="w-full max-h-60"> -->
 
-                <img src="{{'http://localhost/mywebsite/storage/app/image/'.$product->image}}"  alt="image" width="120px" hight="120px" alt="">
+<!-- Products -->
+<section>
+  <div class="container my-5">
+    <header class="mb-4">
+      <h3>New products</h3>
+    </header>
 
-                <!-- <img src="mywebsite\storage\app\image\product_image1692614019_64e33d833e446.png" alt="image" class="w-full max-h-60"> -->
-                <div class="flex items-end justify-end w-full bg-cover">
-                    
-                </div>
-                <div class="px-5 py-3">
-                    <h3 class="text-gray-700 uppercase">{{ $product->name }}</h3>
-                    <span class="mt-2 text-gray-500">${{ $product->price }}</span>
-                    <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
+    <div class="row">
+
+    @foreach ($products as $product)
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow-2-strong">
+          <img src="{{'http://localhost/mywebsite/storage/app/image/'.$product->image}}" class="card-img-top" style="aspect-ratio: 1 / 1" />
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ $product->name }}</h5>
+            <p class="card-text">${{ $product->price }}</p>
+            <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" value="{{ $product->id }}" name="id">
                         <input type="hidden" value="{{ $product->name }}" name="name">
                         <input type="hidden" value="{{ $product->price }}" name="price">
                         <input type="hidden" value="{{ $product->image }}"  name="image">
                         <input type="hidden" value="1" name="quantity">
-                        <button class="px-4 py-2 text-white bg-blue-800 rounded">Add To Cart</button>
-                    </form>
-                </div>
-                
+                       
+                    
+            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+              <button  class="btn btn-primary shadow-0 me-1">Add to cart</button>
+              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
             </div>
-            @endforeach
+            </form>
+          </div>
         </div>
+      </div>
+      @endforeach
     </div>
+  </div>
+</section>
 @endsection
+<!-- Products -->
