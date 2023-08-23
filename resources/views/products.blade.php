@@ -18,6 +18,7 @@
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ $product->name }}</h5>
             <p class="card-text">${{ $product->price }}</p>
+            <p class="card-text">{{ $product->description }}</p>
             <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" value="{{ $product->id }}" name="id">

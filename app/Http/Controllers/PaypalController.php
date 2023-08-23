@@ -33,17 +33,17 @@ class PaypalController extends Controller
                     'quantity'=>1,
                     'unit_amount'=>[
                         'currency_code'=>'USD',
-                        'value'=>'300.00'
+                        'value'=>$total_amount_price
                     ]
                 ],
-                [
-                    'name'=>'Blue T-Shirt',
-                    'quantity'=>1,
-                    'unit_amount'=>[
-                        'currency_code'=>'USD',
-                        'value'=>'58.00'
-                    ]
-                ],
+                // [
+                //     'name'=>'Blue T-Shirt',
+                //     'quantity'=>1,
+                //     'unit_amount'=>[
+                //         'currency_code'=>'USD',
+                //         'value'=>'58.00'
+                //     ]
+                // ],
             ],
             'amount'=>[
                 'currency_code'=>'USD',

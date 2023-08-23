@@ -1,5 +1,4 @@
-@extends('layouts.frontend')
-
+@extends('admin.layout.app')
 
 @section('content')
 
@@ -15,7 +14,7 @@
             <div class="flex-shrink-0">
                 <div class="form-check form-switch form-switch-right form-switch-md">
 
-                    <a href="{{ route('dashboard') }}" style="float:right;" title="Back" class="btn btn-primary"><i aria-hidden="true" class="fa fa-arrow"></i> Back
+                    <a href="{{ route('products.list') }}" style="float:right;" title="Back" class="btn btn-primary"><i aria-hidden="true" class="fa fa-arrow"></i> Back
                     </a>
 
                 </div>
@@ -29,7 +28,8 @@
                     <div class="card-body">
                         <div class="card-body">
                             <form method="POST" action="{{route('product.store')}}" enctype="multipart/form-data" class="form-horizontal" id="my_form" autocomplete="on">
-                                @csrf
+                            @method('POST')   
+                            @csrf
 
                                 <div class="row ">
                                    

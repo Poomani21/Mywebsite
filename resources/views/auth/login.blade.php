@@ -126,7 +126,9 @@ margin-left: 4px;
                 </div>
                 <div class="card-body">
                     <form action="{{ route('login.post') }}" method="POST">
+                        @method('POST')
                         @csrf
+                        
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>

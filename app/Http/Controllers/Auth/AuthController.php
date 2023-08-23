@@ -29,6 +29,7 @@ class AuthController extends Controller
      */
     public function registration()
     {
+        // dd("ji");
         return view('auth.registration');
     }
       
@@ -39,6 +40,8 @@ class AuthController extends Controller
      */
     public function postLogin(Request $request)
     {
+// dd($request->all());
+       
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -46,7 +49,7 @@ class AuthController extends Controller
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')
+            return redirect()->intended('Products')
                         ->withSuccess('You have Successfully loggedin');
         }
   
@@ -60,6 +63,7 @@ class AuthController extends Controller
      */
     public function postRegistration(Request $request)
     {  
+        // dd("ji");
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -69,7 +73,13 @@ class AuthController extends Controller
         $data = $request->all();
         $check = $this->create($data);
          
-        return redirect("dashboard")->withSuccess('Great! You have Successfully loggedin');
+        if(Auth::check()){
+            return redirect("Products")->withSuccess('Great! You have Successfully loggedin');
+
+        }
+        
+            return redirect("/")->withSuccess('Opps! You do not have access');
+        
     }
     
     /**
