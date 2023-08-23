@@ -13,7 +13,12 @@ background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 11
 /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
 }
+
 </style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+
+
 <section class="h-100 gradient-custom">
   <div class="container py-5">
     <div class="row d-flex justify-content-center my-4">
@@ -49,12 +54,12 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
                   @csrf
                   <input type="hidden" value="{{ $item->id }}" name="id">
                   <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
-                  title="Remove item">
+                  title="Move to the wish list">Wish list
                   <i class="fas fa-trash"></i>
                 </button>
-                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
-                  title="Move to the wish list">
-                  <i class="fas fa-heart"></i>
+                <button type="submit" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
+                  title="Remove item">
+                  <i class="fas fa-heart">Remove</i>
                 </button>
                </form>
 
@@ -65,7 +70,7 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
               <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                 <!-- Quantity -->
                 <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2"
+                  <button class="btn btn-primary px-3 me-2" style="height: 39px;"
                     onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
                     <i class="fas fa-minus"></i>
                   </button>
@@ -78,12 +83,12 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
                    
                     <input type="hidden" name="id" value="{{ $item->id}}" >
                     <input id="form1" min="0" name="quantity" value="{{ $item->quantity }}" type="number" class="form-control" />
-                    <label class="form-label" for="form1">Quantity</label>
+                    <!-- <label class="form-label" for="form1">Quantity</label> -->
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
                   </div>
 
-                  <button class="btn btn-primary px-3 ms-2"
+                  <button class="btn btn-primary px-3 ms-2" style="height: 39px"
                     onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                     <i class="fas fa-plus"></i>
                   </button>
@@ -100,6 +105,7 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
               </div>
             </div>
             @endforeach
+            <br>
             <!-- Single item -->
             <form action="{{ route('cart.clear') }}" method="POST">
               @csrf
