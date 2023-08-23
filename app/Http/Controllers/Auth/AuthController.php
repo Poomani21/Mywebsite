@@ -18,6 +18,7 @@ class AuthController extends Controller
      */
     public function index()
     {
+        // dd("ji");
         return view('auth.login');
     }  
       
@@ -49,7 +50,7 @@ class AuthController extends Controller
                         ->withSuccess('You have Successfully loggedin');
         }
   
-        return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
+        return redirect("/")->withSuccess('Oppes! You have entered invalid credentials');
     }
       
     /**
@@ -82,7 +83,7 @@ class AuthController extends Controller
             return view('dashboard');
         }
   
-        return redirect("login")->withSuccess('Opps! You do not have access');
+        return redirect("/")->withSuccess('Opps! You do not have access');
     }
     
     /**
@@ -108,6 +109,6 @@ class AuthController extends Controller
         Session::flush();
         Auth::logout();
   
-        return Redirect('login');
+        return Redirect('/');
     }
 }
