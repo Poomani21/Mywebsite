@@ -3,6 +3,12 @@
 @section('content')
 
 <!-- Products -->
+
+@if ($message = Session::get('success'))
+<div class="alert alert-success" style="margin-bottom: 31px;height: 44px;">
+  <p>{{ $message }}</p>
+</div>
+@endif
 <section>
   <div class="container my-5">
     <header class="mb-4">

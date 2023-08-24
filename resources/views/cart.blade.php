@@ -176,6 +176,10 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
             <a href="{{route('make.payment',$total_amount_price)}}" class="btn btn-primary btn-lg btn-block">
               Go to checkout via Paypal
 </a>
+
+<a href="{{route('address.add')}}" class="btn btn-secondary btn-lg btn-block">
+            Address
+</a>
          
            
 

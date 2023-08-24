@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Illuminate\Support\Facades\Redirect;
@@ -81,6 +82,8 @@ class PaypalController extends Controller
 
     public function paymentSuccess(Request $request){
         $response = $this->provider->capturePaymentOrder($request->get('token'));
+        session()->flash('success', "Payment successfully");
+
         return redirect()->route('products.list');
         // dd($response);
     }

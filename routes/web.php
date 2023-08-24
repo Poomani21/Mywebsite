@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
@@ -50,3 +51,5 @@ Route::post('productStore', [ProductController::class, 'productStore'])->name('p
 Route::get('handle-payment/{total_amount_price}',[PaypalController::class,'handlePayment'])->name('make.payment');
 Route::get('payment-success',[PaypalController::class,'paymentSuccess'])->name('payment.success');
 Route::get('payment-failed',[PaypalController::class,'paymentFailed'])->name('payment.failed');
+
+Route::get('/address_create', [AddressController::class, 'create'])->name('address.add');
