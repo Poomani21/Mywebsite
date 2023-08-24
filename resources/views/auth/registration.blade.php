@@ -115,7 +115,7 @@ margin-left: 4px;
 
     <div class="container">
         <div class="d-flex justify-content-center h-100">
-            <div class="card">
+            <div class="card" style="height: 383px;">
                 <div class="card-header">
                     <h3>Register</h3>
                     <div class="d-flex justify-content-end social_icon">
