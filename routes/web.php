@@ -46,6 +46,7 @@ Route::post('clear', [CartController::class, 'clearAllCart'])->name('cart.clear'
 
 Route::get('productCreate', [ProductController::class, 'productCreate'])->name('product.create');
 Route::post('productStore', [ProductController::class, 'productStore'])->name('product.store');
+Route::get('productlist', [ProductController::class, 'index'])->name('product.index');
 
 //pay pal credential
 Route::get('handle-payment/{total_amount_price}',[PaypalController::class,'handlePayment'])->name('make.payment');

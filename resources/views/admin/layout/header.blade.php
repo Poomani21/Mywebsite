@@ -27,6 +27,7 @@
             <a href="{{ route('products.list')}}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-heart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a>
             <a href="{{ route('cart.list') }}" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart {{ Cart::getTotalQuantity()}} </p> </a>
             <a href="{{route('product.create')}}" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Add Product </p> </a>
+            <a href="{{route('product.index')}}" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Product List </p> </a>
 
           </div>
         </div>

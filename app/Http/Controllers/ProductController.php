@@ -56,5 +56,13 @@ class ProductController extends Controller
 
         return redirect()->route('products.list');
     }
+
+
+    public function index()
+    {
+        $products = Product::all();
+
+        return view('product.index', compact('products'));
+    }
     
 } 
