@@ -1,11 +1,11 @@
 <!-- Feature -->
 
-    <header class="pt-4 pb-3">
+    <!-- <header class="pt-4 pb-3">
       <h3>Why choose us</h3>
-    </header>
+    </header> -->
 
-    <div class="row mb-4">
-      <div class="col-lg-4 col-md-6">
+    <!-- <div class="row mb-4"> -->
+      <!-- <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
             <i class="fas fa-camera-retro fa-2x fa-fw text-primary floating"></i>
@@ -14,11 +14,11 @@
             <h6 class="title">Reasonable prices</h6>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
           </figcaption>
-        </figure>
+        </figure> -->
         <!-- itemside // -->
-      </div>
+      <!-- </div> -->
       <!-- col // -->
-      <div class="col-lg-4 col-md-6">
+      <!-- <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
             <i class="fas fa-star fa-2x fa-fw text-primary floating"></i>
@@ -27,11 +27,11 @@
             <h6 class="title">Best quality</h6>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
           </figcaption>
-        </figure>
+        </figure> -->
         <!-- itemside // -->
-      </div>
+      <!-- </div> -->
       <!-- col // -->
-      <div class="col-lg-4 col-md-6">
+      <!-- <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
             <i class="fas fa-plane fa-2x fa-fw text-primary floating"></i>
@@ -40,11 +40,11 @@
             <h6 class="title">Worldwide shipping</h6>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
           </figcaption>
-        </figure>
+        </figure> -->
         <!-- itemside // -->
-      </div>
+      <!-- </div> -->
       <!-- col // -->
-      <div class="col-lg-4 col-md-6">
+      <!-- <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
             <i class="fas fa-users fa-2x fa-fw text-primary floating"></i>
@@ -53,11 +53,11 @@
             <h6 class="title">Customer satisfaction</h6>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
           </figcaption>
-        </figure>
+        </figure> -->
         <!-- itemside // -->
-      </div>
+      <!-- </div> -->
       <!-- col // -->
-      <div class="col-lg-4 col-md-6">
+      <!-- <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
             <i class="fas fa-thumbs-up fa-2x fa-fw text-primary floating"></i>
@@ -66,11 +66,11 @@
             <h6 class="title">Happy customers</h6>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
           </figcaption>
-        </figure>
+        </figure> -->
         <!-- itemside // -->
-      </div>
+      <!-- </div> -->
       <!-- col // -->
-      <div class="col-lg-4 col-md-6">
+      <!-- <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
             <i class="fas fa-box fa-2x fa-fw text-primary floating"></i>
@@ -79,10 +79,10 @@
             <h6 class="title">Thousand items</h6>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
           </figcaption>
-        </figure>
+        </figure> -->
         <!-- itemside // -->
-      </div>
+      <!-- </div> -->
       <!-- col // -->
-    </div>
+    <!-- </div> -->
   
 <!-- Feature -->

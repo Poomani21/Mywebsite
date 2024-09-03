@@ -7,11 +7,11 @@
         <!-- Grid column -->
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           <!-- Content -->
-          <a href="https://mdbootstrap.com/" target="_blank" class="">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="{{route('products.list')}}" target="_blank" class="">
+            <img src="http://localhost/mywebsite/public/images/mywebsiteimage.jpg" height="35" />
           </a>
           <p class="mt-2 text-dark">
-            © 2023 Copyright: MDBootstrap.com
+            © 2023 Copyright: mywebsite.com
           </p>
         </div>
         <!-- Grid column -->

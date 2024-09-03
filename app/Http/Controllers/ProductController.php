@@ -8,10 +8,16 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function productList()
+    public function productList(Request $request)
     {
-        $products = Product::all();
+        $products = Product::orderBy('id','desc');
 
+        if($request->search !="")
+        {
+$products= $products->where('name','like','%'.$request->search.'%')->orderBy('id','desc');
+        }
+
+        $products=$products->get();
         return view('products', compact('products'));
     }
 

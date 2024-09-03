@@ -37,13 +37,19 @@
         <div class="col-lg-5 col-md-12 col-12">
           <div class="input-group float-center">
             <div class="form-outline">
-              <input type="search" id="form1" class="form-control" placeholder="Search" style="padding: 0.375rem 3.75rem;" />
+              <form action="{{route('products.list')}}"  method="POST">
+                @method('GET')
+                @csrf
+               
+              <input type="search" id="form1" name="search" value="" class="form-control" placeholder="Search" style="padding: 0.375rem 3.75rem;" />
     
             </div>
-            <button type="button" class="btn btn-primary shadow-0" style="padding: 20px;
+            
+            <button type="submit" class="btn btn-primary shadow-0" style="padding: 20px;
     height: 7px;">
               <i class="fas fa-search"></i>
             </button>
+            </form>
           </div>
         </div>
         <!-- Right elements -->
