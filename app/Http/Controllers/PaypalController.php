@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Redirect;
 
 class PaypalController extends Controller
 {
+    
     private $provider;
 
     public function __construct(){
         $this->provider = new PayPalClient;
         $this->provider->getAccessToken();
+        $this->middleware('auth');
     }
 
     public function handlePayment(Request $request,$total_amount_price){

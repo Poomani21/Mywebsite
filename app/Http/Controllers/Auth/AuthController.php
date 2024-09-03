@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
   
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
@@ -18,7 +19,7 @@ class AuthController extends Controller
      */
     public function index()
     {
-        // dd("ji");
+
         return view('auth.login');
     }  
       
@@ -29,7 +30,7 @@ class AuthController extends Controller
      */
     public function registration()
     {
-        // dd("ji");
+    
         return view('auth.registration');
     }
       
@@ -38,14 +39,13 @@ class AuthController extends Controller
      *
      * @return response()
      */
-    public function postLogin(Request $request)
+    public function postLogin(LoginRequest $request)
     {
-// dd($request->all());
        
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+        // $request->validate([
+        //     'email' => 'required',
+        //     'password' => 'required',
+        // ]);
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
@@ -63,7 +63,7 @@ class AuthController extends Controller
      */
     public function postRegistration(Request $request)
     {  
-        // dd("ji");
+    
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',

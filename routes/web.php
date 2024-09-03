@@ -7,6 +7,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PaypalController;
   
+//Auth routes
+
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
@@ -31,26 +33,31 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     return view('welcome');
 });*/
 
+Route::middleware('auth')->group(function() {
 
-//product routes
+//cart routes
 
-Route::get('Products', [ProductController::class, 'productList'])->name('products.list');
 Route::get('cart', [CartController::class, 'cartList'])->name('cart.list');
 Route::post('cart', [CartController::class, 'addToCart'])->name('cart.store');
 Route::post('update-cart', [CartController::class, 'updateCart'])->name('cart.update');
 Route::post('remove', [CartController::class, 'removeCart'])->name('cart.remove');
 Route::post('clear', [CartController::class, 'clearAllCart'])->name('cart.clear');
 
+//product routes
 
-//Add product routes
-
+Route::get('Products', [ProductController::class, 'productList'])->name('products.list');
 Route::get('productCreate', [ProductController::class, 'productCreate'])->name('product.create');
 Route::post('productStore', [ProductController::class, 'productStore'])->name('product.store');
 Route::get('productlist', [ProductController::class, 'index'])->name('product.index');
 
-//pay pal credential
+//paypal credential routes
+
 Route::get('handle-payment/{total_amount_price}',[PaypalController::class,'handlePayment'])->name('make.payment');
 Route::get('payment-success',[PaypalController::class,'paymentSuccess'])->name('payment.success');
 Route::get('payment-failed',[PaypalController::class,'paymentFailed'])->name('payment.failed');
 
+
+//address routes
+
 Route::get('/address_create', [AddressController::class, 'create'])->name('address.add');
+});
