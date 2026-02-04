@@ -1,193 +1,541 @@
-
 @extends('admin.layout.app')
 
 @section('content')
 <style>
+/* Gradient background */
 .gradient-custom {
-/* fallback for old browsers */
-background: #6a11cb;
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
 
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+/* Card styles */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  border: none;
+  margin-bottom: 20px;
+}
 
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+/* Card Header */
+.card-header {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Cart Item Row */
+.cart-item-row {
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+  transition: background 0.2s ease;
+}
+.cart-item-row:hover {
+  background: #fafafa;
+}
+
+/* Product Image */
+.cart-item-image {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+.cart-item-row:hover .cart-item-image {
+  transform: scale(1.05);
+}
+
+/* Product Details */
+.cart-item-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+.cart-item-details .product-name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Quantity Controls */
+.quantity-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quantity-wrapper button {
+  border: 1px solid #ccc;
+  background: #fff;
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.quantity-wrapper button:hover {
+  background: #f0f0f0;
+}
+.quantity-wrapper input {
+  width: 60px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 4px;
+  font-size: 14px;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 30px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Remove/Wishlist Buttons */
+.cart-item-details .btn {
+  min-width: 100px;
+  font-size: 13px;
+  padding: 4px 10px;
+  margin-top: 5px;
+}
+
+/* Cart Summary */
+.summary-card {
+  position: sticky;
+  top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+.summary-card ul li {
+  font-size: 16px;
+  padding: 10px 0;
+}
+.summary-card ul li span {
+  font-weight: 600;
+  color: #ff9900;
+}
+
+/* Checkout Buttons */
+.summary-card a.btn {
+  border-radius: 30px;
+  font-weight: 600;
+  padding: 10px 15px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+.summary-card a.btn-primary:hover {
+  background-color: #e68a00;
+  border-color: #e68a00;
+}
+.summary-card a.btn-secondary:hover {
+  background-color: #555;
+  border-color: #555;
+}
+
+/* Payment Logos */
+.payment-logos img {
+  margin-right: 10px;
+  height: 40px;
+  filter: grayscale(0.1);
+  transition: all 0.2s ease;
+}
+.payment-logos img:hover {
+  filter: grayscale(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px){
+  .cart-item-row {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cart-item-details, .cart-item-quantity, .cart-item-price {
+    margin-top: 10px;
+  }
+  .summary-card {
+    margin-top: 20px;
+  }
+}
+
+.text-danger {
+    color: #dc3545 !important;
+    font-weight: 600;
+}
+
+.text-green {
+    color: #258c34 !important;
+    font-weight: 600;
+}
+
+a.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 </style>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-
-
-<section class="h-100 gradient-custom">
-  <div class="container py-5">
-    <div class="row d-flex justify-content-center my-4">
-      <div class="col-md-8">
+<section class="gradient-custom">
+  <div class="container">
+    <div class="row justify-content-center">
+      
+      <!-- Cart Items Column -->
+      <div class="col-lg-8">
         <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0">Cart - {{ Cart::getTotalQuantity() }} items</h5>
+          <div class="card-header">
+            Cart - {{ Cart::getTotalQuantity() }} items
           </div>
           <div class="card-body">
 
             @foreach ($cartItems as $item)
-            <!-- Single item -->
-            <div class="row">
-              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                <!-- Image -->
-                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                  <img src="{{'http://localhost/mywebsite/storage/app/image/'.$item->attributes->image}}"
-                    class="w-100" alt="Blue Jeans Jacket" />
-                  <a href="#!">
-                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                  </a>
-                </div>
-                <!-- Image -->
+            <div class="row cart-item-row align-items-center">
+              <!-- Image -->
+              <div class="col-lg-3 col-md-4 text-center">
+                <img src="{{ asset('images/' . $item->attributes->image) }}" class="cart-item-image" alt="{{ $item->name }}">
               </div>
 
-              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                <!-- Data -->
-                <p><strong>{{ $item->name }}</strong></p>
-                <p>Color: blue</p>
+              <!-- Details -->
+              <div class="col-lg-5 col-md-5 cart-item-details">
+                <p class="product-name">{{ $item->name }}</p>
+                <p>Color: Blue</p>
                 <p>Size: M</p>
-               
-                <form action="{{ route('cart.remove') }}" method="POST">
+                <form action="{{ route('cart.remove') }}" method="POST" class="d-inline">
                   @csrf
                   <input type="hidden" value="{{ $item->id }}" name="id">
-                  <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
-                  title="Move to the wish list">Wish list
-                  <i class="fas fa-trash"></i>
-                </button>
-                <button type="submit" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
-                  title="Remove item">
-                  <i class="fas fa-heart">Remove</i>
-                </button>
-               </form>
-
-              
-                <!-- Data -->
-              </div>
-
-              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <!-- Quantity -->
-                <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2" style="height: 39px;"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                    <i class="fas fa-minus"></i>
-                  </button>
-
-          
-
-                  <form action="{{ route('cart.update') }}" method="POST">
-                    @csrf
-                  <div class="form-outline">
-                   
-                    <input type="hidden" name="id" value="{{ $item->id}}" >
-                    <input id="form1" min="0" name="quantity" value="{{ $item->quantity }}" type="number" class="form-control" />
-                    <!-- <label class="form-label" for="form1">Quantity</label> -->
-                    <button type="submit" class="btn btn-primary">Update</button>
+                  <button type="submit" class="btn btn-danger btn-sm mt-2"><i class="fas fa-trash"></i> Remove</button>
                 </form>
-                  </div>
-
-                  <button class="btn btn-primary px-3 ms-2" style="height: 39px"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                </div>
-                <!-- Quantity -->
-
-                <!-- Price -->
+                <a href="{{ route('products.list') }}" class="btn btn-outline-secondary btn-sm mt-2">
+                    <i class="fas fa-heart"></i> Go Back
+                </a>
               
-                <p class="text-start text-md-center">
-                  <strong>${{$item->price}}</strong>
-                </p>
-                
-                <!-- Price -->
               </div>
+
+              <!-- Quantity & Price -->
+              <div class="col-lg-4 col-md-3 cart-item-quantity text-center">
+                <div class="d-flex justify-content-center align-items-center mb-2">
+                    <div class="quantity-wrapper">
+                        <button type="button" class="qty-btn" data-action="decrease" data-id="{{ $item->id }}">-</button>
+            
+                        <input type="number"
+                               class="qty-input"
+                               value="{{ $item->quantity }}"
+                               min="1"
+                               readonly>
+            
+                        <button type="button" class="qty-btn" data-action="increase" data-id="{{ $item->id }}">+</button>
+                    </div>
+                </div>
+            
+                <p class="fw-bold">${{ $item->price }}</p>
+            </div>
+            
             </div>
             @endforeach
-            <br>
-            <!-- Single item -->
-            <form action="{{ route('cart.clear') }}" method="POST">
+
+            <form action="{{ route('cart.clear') }}" method="POST" class="mt-3">
               @csrf
-              <button class="btn btn-danger">Remove All Cart</button>                            
+              <button class="btn btn-danger w-100">Remove All Cart</button>
             </form>
-           
 
           </div>
         </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <p class="mb-1"><strong>Deliver to</strong></p>
+        
+            <select id="addressSelect" class="form-select">
+              <option value="" selected disabled>-- Select Address --</option>
+              @foreach($addresses as $address)
+                <option value="{{ $address->id }}">
+                  {{ $address->address_line1 }}, {{ $address->city }}
+                </option>
+              @endforeach
+            </select>
+        
+            <button class="btn btn-outline-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#addressModal">
+              + Add New Address
+            </button>
+          </div>
+        </div>
+        
+
+        <!-- Shipping Info -->
         <div class="card mb-4">
           <div class="card-body">
             <p><strong>Expected shipping delivery</strong></p>
-            <p class="mb-0">12.10.2020 - 14.10.2020</p>
+        
+            <p id="deliveryEstimate" class="mb-1 text-muted">
+              Select an address to see delivery date
+            </p>
+        
+            <p id="deliveryAddress" class="mb-0 small text-secondary"></p>
           </div>
         </div>
-        <div class="card mb-4 mb-lg-0">
-          <div class="card-body">
-            <p><strong>We accept</strong></p>
-            <img class="me-2" width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-              alt="Visa" />
-            <img class="me-2" width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-              alt="American Express" />
-            <img class="me-2" width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-              alt="Mastercard" />
-            <img class="me-2" width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.webp"
-              alt="PayPal acceptance mark" />
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
+        
+        
+        
+        
+
+        <!-- Payment Logos -->
         <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="mb-0">Summary</h5>
+          <div class="card-body payment-logos d-flex flex-wrap align-items-center">
+            <p class="me-2 mb-0">We accept:</p>
+        
+            <!-- Visa -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 36 24">
+              <path fill="#1a1f71" d="M0 0h36v24H0z"/>
+              <text x="2" y="17" fill="#fff" font-size="14" font-family="Arial, sans-serif">VISA</text>
+            </svg>
+        
+            <!-- American Express -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 36 24">
+              <rect width="36" height="24" fill="#2e77bc"/>
+              <text x="3" y="17" fill="#fff" font-size="10" font-family="Arial, sans-serif">AMEX</text>
+            </svg>
+        
+            <!-- Mastercard -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 36 24">
+              <circle cx="14" cy="12" r="9" fill="#eb001b"/>
+              <circle cx="22" cy="12" r="9" fill="#f79e1b"/>
+            </svg>
+        
+            <!-- PayPal -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 36 24">
+              <rect width="36" height="24" fill="#003087"/>
+              <text x="4" y="17" fill="#fff" font-size="10" font-family="Arial, sans-serif">PayPal</text>
+            </svg>
+        
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Summary Column -->
+      <div class="col-lg-4">
+        <div class="card summary-card mb-4">
+          <div class="card-header">
+            Cart - <span id="cartTotalQty">{{ Cart::getTotalQuantity() }}</span> items
           </div>
           <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+            <ul class="list-group list-group-flush mb-3">
+              <li class="list-group-item d-flex justify-content-between px-0">
                 Products
-                <span>${{ Cart::getTotal() }}</span>
+                <span>$<span id="summaryTotalPrice">{{ Cart::getTotal() }}</span></span>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <li class="list-group-item d-flex justify-content-between px-0">
                 Quantity
-                <span>{{ Cart::getTotalQuantity()}}</span>
+                <span id="summaryTotalQty">{{ Cart::getTotalQuantity() }}</span>
               </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                <div>
-                  <strong>Total amount</strong>
-                  <strong>
-                    <p class="mb-0">(including VAT)</p>
-                  </strong>
-                </div>
-                <span><strong>${{ Cart::getTotal() }}</strong></span>
+              <li class="list-group-item d-flex justify-content-between px-0">
+                <strong>Total amount</strong>
+                <span><strong>$<span id="summaryGrandTotal">{{ Cart::getTotal() }}</span></strong></span>
               </li>
             </ul>
 
-            @php 
-            $total_amount_price=Cart::getTotal();
-            @endphp
-            <input type="hidden"  name="total_amount_price" value="{{$total_amount_price}}">
-           
-            
-            <a href="{{route('make.payment',$total_amount_price)}}" class="btn btn-primary btn-lg btn-block">
-              Go to checkout via Paypal
-</a>
+            <a href="{{ route('make.payment', Cart::getTotal()) }}" 
+              id="checkoutBtn"
+              data-base-url="{{route('make.payment', Cart::getTotal())}}"
+              class="btn btn-primary w-100 mb-2 disabled"
+              aria-disabled="true"
+              >
+              Go to Checkout via Paypal
+            </a>
 
-<a href="{{route('address.add')}}" class="btn btn-secondary btn-lg btn-block">
-            Address
-</a>
-         
-           
+            <button class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#addressModal" id="addressButton">
+              Add Address
+            </button>
+            
 
           </div>
         </div>
       </div>
+
     </div>
   </div>
+  
+
+  <div class="modal fade" id="addressModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <form action="{{ route('address.store') }}" method="POST">
+          @csrf
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Address Line</label>
+              <input type="text" name="address_line1" class="form-control" required>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">City</label>
+              <input type="text" name="city" class="form-control" required>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">State</label>
+              <input type="text" name="state" class="form-control" required>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Pincode</label>
+              <input type="text" name="pincode" class="form-control" required>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+  
 </section>
 
+<script>
+
+
+
+  document.getElementById('addressSelect')?.addEventListener('change', function () {
+      const addressId = this.value;
+  
+      if (!addressId) {
+          document.getElementById('deliveryEstimate').innerText = 'Select an address to see delivery date';
+          document.getElementById('deliveryAddress').innerText = '';
+          return;
+      }
+  
+      const url = "{{ route('cart.delivery.estimate', ':id') }}".replace(':id', addressId);
+  
+      const estimateEl = document.getElementById('deliveryEstimate');
+      const addressEl  = document.getElementById('deliveryAddress');
+
+      fetch(url)
+          .then(res => res.json())
+          .then(data => {
+          
+            if (data.success) {
+
+              estimateEl.classList.add('text-green');
+              estimateEl.classList.remove('text-danger');
+              estimateEl.innerText = data.estimate;
+              addressEl.innerText  = 'Delivering to: ' + data.address;
+
+              const addressId = document.getElementById('addressSelect').value;
+
+              const btn = document.getElementById('checkoutBtn');
+              const baseUrl = btn.getAttribute('data-base-url');
+
+              // Update checkout URL with address id
+              btn.href = baseUrl + '?address_id=' + addressId;
+
+              btn.classList.remove('disabled');
+              btn.removeAttribute('aria-disabled');
+              $('#addressButton').hide();
+              
+            } else {
+
+               // ❌ Show in danger (red)
+               estimateEl.classList.add('text-danger');
+               estimateEl.classList.remove('text-green');
+
+                // Optional: clear address text
+                addressEl.innerText = '';
+                estimateEl.innerText = 'Delivery is not available for the selected address';
+                $('#checkoutBtn')
+                .addClass('disabled')
+                .attr('aria-disabled', 'true');
+                $('#addressButton').show();
+               
+            }
+
+          })
+          .catch(err => console.error(err));
+  });
+  </script>
+  
+  <script>
+
+$(document).ready(function () {
+    $('#checkoutBtn').on('click', function (e) {
+        if ($(this).hasClass('disabled')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+});
+
+
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const action = this.dataset.action;
+            const id = this.dataset.id;
+            const input = this.parentElement.querySelector('.qty-input');
+    
+            let currentQty = parseInt(input.value);
+    
+            if (action === 'increase') {
+                currentQty++;
+            } else if (action === 'decrease' && currentQty > 1) {
+                currentQty--;
+            } else {
+                return;
+            }
+    
+            // Update input immediately
+            input.value = currentQty;
+    
+            fetch("{{ route('cart.update') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    id: id,
+                    quantity: currentQty
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // 🔥 Update header + summary instantly
+                    document.getElementById('cartTotalQty').innerText = data.totalQuantity;
+                    document.getElementById('summaryTotalQty').innerText = data.totalQuantity;
+    
+                    document.getElementById('summaryTotalPrice').innerText = data.totalPrice;
+                    document.getElementById('summaryGrandTotal').innerText = data.totalPrice;
+                    // 🔥 Update PayPal checkout link
+                    const checkoutBtn = document.getElementById('checkoutBtn');
+                    const baseUrl = checkoutBtn.dataset.baseUrl;
+                    checkoutBtn.href = baseUrl + '/' + data.totalPrice;
+                } else {
+                    alert("Failed to update cart");
+                }
+            })
+            .catch(err => console.error(err));
+        });
+    });
+    </script>
+    
+    
+  
+
+
 @endsection
+
+

@@ -1,85 +1,201 @@
+<style>
+  /* Header container */
+.shop-header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 
-  <!-- Jumbotron -->
-  <div class="p-3 text-center bg-white border-bottom">
-    <div class="container">
-      <div class="row gy-3">
-        <!-- Left elements -->
-        <div class="col-lg-2 col-sm-4 col-4">
-          <a href="{{route('products.list')}}" target="_blank" class="float-start">
-            <img src="http://localhost/mywebsite/public/images/mywebsiteimage.jpg" height="60" class="rounded-circle"/>
+/* Action icons right side */
+.header-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: #f5f5f5;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.header-actions a:hover {
+    background: #ff9900;
+    color: #000;
+}
+
+/* Cart badge */
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* Bottom navbar */
+.main-nav {
+    background: #232f3e;
+}
+
+.main-nav .nav-link {
+    color: #fff !important;
+    font-weight: 500;
+    padding: 10px 16px;
+}
+
+.main-nav .nav-link:hover {
+    background: #37475a;
+    border-radius: 4px;
+}
+
+/* User avatar circle */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #ff9900; /* Amazon-style */
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+/* Dropdown menu */
+.user-dropdown-menu {
+    min-width: 180px;
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+    background-color: #fff;
+    margin-top: 8px;
+}
+
+/* Dropdown items */
+.user-dropdown-menu .dropdown-item {
+    padding: 10px 20px;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.user-dropdown-menu .dropdown-item:hover {
+    background-color: #f5f5f5;
+    color: #ff9900; /* Amazon accent on hover */
+}
+
+/* Logout button highlight */
+.user-dropdown-menu .logout-btn:hover {
+    background-color: #ffebcc;
+    color: #d98200;
+    font-weight: 600;
+}
+
+/* Divider styling */
+.user-dropdown-menu .dropdown-divider {
+    margin: 0.5rem 0;
+    border-top: 1px solid #eee;
+}
+
+
+
+</style>
+
+
+<nav class="navbar navbar-expand-lg main-nav">
+  <div class="container">
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('products.list') }}">Home</a>
+        </li>
+
+        @if(auth()->check() && auth()->user()->role === 'Admin')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('product.index') }}">Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('product.create') }}">Add Product</a>
+            </li>
+        @endif
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('cart.list') }}">My Cart</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('orders.index') }}">
+            @if(auth()->check() && auth()->user()->role === 'Admin')
+                User Orders List
+              @else
+                My Orders List
+            @endif
           </a>
-        </div>
-        <!-- Left elements -->
+        </li>        
+      </ul>
 
-        <!-- Center elements -->
-        <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-          <div class="d-flex float-end">
+      <!-- User Avatar on top-right corner -->
+      <!-- User Avatar on top-right corner -->
+      @auth
+      <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <div class="user-avatar">
+                      {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(strrchr(auth()->user()->name, " "), 1)) }}
+                  </div>
+                  <span class="ms-2 d-none d-md-inline">{{ auth()->user()->name }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown">
+                  <li><a class="dropdown-item" href="{{ route('orders.index') }}">My Orders</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                      <a class="dropdown-item logout-btn" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                          Logout
+                      </a>
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                          @csrf
+                      </form>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+      @endauth
 
-                @guest
-
-            <a href="{{ route('login') }}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Login</p> </a>
-            <a href="{{ route('register') }}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Register</p> </a>
-
-                @else
-                <a href="{{ route('logout') }}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Logout</p> </a>
-                @endguest
-                
-            <a href="{{ route('products.list')}}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-heart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a>
-            <a href="{{ route('cart.list') }}" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart {{ Cart::getTotalQuantity()}} </p> </a>
-            <a href="{{route('product.create')}}" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Add Product </p> </a>
-            <a href="{{route('product.index')}}" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Product List </p> </a>
-
-          </div>
-        </div>
-        <!-- Center elements -->
-
-        <!-- Right elements -->
-        <div class="col-lg-5 col-md-12 col-12">
-          <div class="input-group float-center">
-            <div class="form-outline">
-              <form action="{{route('products.list')}}"  method="POST">
-                @method('GET')
-                @csrf
-               
-              <input type="search" id="form1" name="search" value="" class="form-control" placeholder="Search" style="padding: 0.375rem 3.75rem;" />
-    
-            </div>
-            
-            <button type="submit" class="btn btn-primary shadow-0" style="padding: 20px;
-    height: 7px;">
-              <i class="fas fa-search"></i>
-            </button>
-            </form>
-          </div>
-        </div>
-        <!-- Right elements -->
-      </div>
     </div>
   </div>
-  <!-- Jumbotron -->
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Toggle button -->
-      <button
-              class="navbar-toggler border py-2 text-dark"
-              type="button"
-              data-mdb-toggle="collapse"
-              data-mdb-target="#navbarLeftAlignExample"
-              aria-controls="navbarLeftAlignExample"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-              >
-        <i class="fas fa-bars"></i>
-      </button>
+</nav>
 
 
-    </div>
-    <!-- Container wrapper -->
-  </nav>
-  <!-- Navbar -->
-  <!-- Jumbotron -->
-  
-  <!-- Jumbotron -->
+
+{{-- @guest
+              <a href="{{ route('login') }}" class="text-dark">
+                <i class="fas fa-user"></i> <span class="d-none d-md-inline">Login</span>
+              </a>
+              <a href="{{ route('register') }}" class="text-dark">
+                <i class="fas fa-user-plus"></i> <span class="d-none d-md-inline">Register</span>
+              </a>
+            @else
+              <a href="{{ route('logout') }}" class="text-dark">
+                <i class="fas fa-sign-out-alt"></i> <span class="d-none d-md-inline">Logout</span>
+              </a>
+            @endguest --}}

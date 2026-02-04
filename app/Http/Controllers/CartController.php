@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,14 @@ class CartController extends Controller
     public function cartList()
     {
         $cartItems = \Cart::getContent();
-      
-        // dd($cartItems);
-        return view('cart', compact('cartItems'));
+
+        if ($cartItems->isEmpty()) {
+            // Redirect to products list if cart is empty
+            return redirect()->route('products.list')->with('info', 'Your cart is empty!');
+        }
+        // Fetch user's addresses (adjust userID if needed)
+        $addresses = Address::where('userID', auth()->id())->get();
+        return view('cart', compact('cartItems','addresses'));
     }
 
 
@@ -33,7 +39,9 @@ class CartController extends Controller
         ]);
         session()->flash('success', 'Product is Added to Cart Successfully !');
 
-        return redirect()->route('cart.list');
+        // return redirect()->route('cart.list');
+        return response()->json(['success' => true,'totalQuantity' => \Cart::getTotalQuantity(),'productQuantity' => \Cart::get($request->id)->quantity ]);
+
     }
 
     public function updateCart(Request $request)
@@ -48,10 +56,14 @@ class CartController extends Controller
             ]
         );
 
-        session()->flash('success', 'Item Cart is Updated Successfully !');
-
-        return redirect()->route('cart.list');
+        return response()->json([
+            'success' => true,
+            'totalQuantity' => \Cart::getTotalQuantity(),
+            'totalPrice' => \Cart::getTotal(),
+        ]);
     }
+
+
 
     public function removeCart(Request $request)
     {
@@ -68,5 +80,13 @@ class CartController extends Controller
         session()->flash('success', 'All Item Cart Clear Successfully !');
 
         return redirect()->route('cart.list');
+    }
+
+    // Get total quantity (for page load)
+    public function getTotalQuantity() {
+        return response()->json([
+            'success' => true,
+            'totalQuantity' => \Cart::getTotalQuantity()
+        ]);
     }
 }

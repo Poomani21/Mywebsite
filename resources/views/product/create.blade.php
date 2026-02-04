@@ -38,7 +38,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="name" class="control-label">Product Name<small class="text-danger required">*</small></label>
-                                            <input name="name" type="text" id="name" class="form-control" value="{{ old('name') }}">
+                                            <input name="name" type="text" id="name" class="form-control" value="{{ old('name') }}" required>
                                             @error('name')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -48,7 +48,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="price" class="control-label">Product Price<small class="text-danger required">*</small></label>
-                                            <input name="price" type="number" id="price" class="form-control" value="{{ old('price') }}">
+                                            <input name="price" type="number" id="price" class="form-control" value="{{ old('price') }}" required>
                                             @error('price')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -58,7 +58,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="description" class="control-label">Product Description<small class="text-danger required"></small></label>
-                                            <textarea name="description" type="text" id="description" class="form-control">{{old('description')}}</textarea>
+                                            <textarea name="description" type="text" id="description" class="form-control" required>{{old('description')}}</textarea>
                                             @error('description')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -68,7 +68,7 @@
                                     <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="image" class="control-label">Product Image</label>
-                                        <input name="image" type="file" id="image" class="form-control">
+                                        <input name="image" type="file" id="image" class="form-control" required>
                                         <small>Allowed File Formats: jpg, jpeg, png</small>
                                         @error('image')
                                         <span class="text-danger">{{ $message }}</span>

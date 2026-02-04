@@ -6,15 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
 use MongoDB\Laravel\Eloquent\Model;
 
-class Product extends Model
+class Order extends Model
 {
     use HasFactory;
+
     protected $connection = 'mongodb';
-    protected $collection = 'products';
+    protected $collection = 'orders';
+
     protected $fillable = [
-        'name',
-        'price',
-        'image',
-        'description',
+        'userID',
+        'paypal_order_id',
+        'items',
+        'total_amount',
+        'status',
+        'shipping_address'
     ];
 }

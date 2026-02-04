@@ -19,6 +19,9 @@ class AuthController extends Controller
      */
     public function index()
     {
+        if (Auth::check()) {
+            return redirect()->route('products.list'); // already logged in → go home
+        }
 
         return view('auth.login');
     }  
@@ -49,7 +52,7 @@ class AuthController extends Controller
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('Products')
+            return redirect()->intended('home')
                         ->withSuccess('You have Successfully loggedin');
         }
   
@@ -74,7 +77,7 @@ class AuthController extends Controller
         $check = $this->create($data);
          
         if(Auth::check()){
-            return redirect("Products")->withSuccess('Great! You have Successfully loggedin');
+            return redirect("home")->withSuccess('Great! You have Successfully loggedin');
 
         }
         
@@ -106,7 +109,8 @@ class AuthController extends Controller
       return User::create([
         'name' => $data['name'],
         'email' => $data['email'],
-        'password' => Hash::make($data['password'])
+        'password' => Hash::make($data['password']),
+        'role'=>'User'
       ]);
     }
     

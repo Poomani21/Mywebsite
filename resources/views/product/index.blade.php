@@ -1,41 +1,392 @@
 @extends('admin.layout.app')
 
 @section('content')
-
 <style>
-   .image{
-    height: 168px;
-   }
-   
+/* ===========================
+   Product Grid
+=========================== */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Product Card */
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    background: #f8f8f8;
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Product Info */
+.product-info {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.product-info h5 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.product-info p {
+    color: #555;
+    margin: 0 0 12px 0;
+    font-size: 14px;
+}
+
+.product-price {
+    font-weight: 700;
+    color: #ff9900;
+    margin-bottom: 12px;
+}
+
+/* Actions */
+.product-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.product-actions .btn {
+    border-radius: 30px;
+    font-size: 14px;
+    padding: 6px 12px;
+}
+
+/* ===========================
+   Modal Styles
+=========================== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 500px;
+    margin: 5% auto;
+    padding: 25px;
+    text-align: left;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-content h4 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.modal-content form .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-content form label {
+    font-weight: 500;
+}
+
+.modal-content form input,
+.modal-content form textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.modal-content form textarea {
+    resize: vertical;
+}
+
+
+/* Buttons in modal footer */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-footer .btn {
+    border-radius: 30px;
+    padding: 8px 16px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    0% {opacity: 0; transform: translateY(-20px);}
+    100% {opacity: 1; transform: translateY(0);}
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .product-card img { height: 150px; }
+}
 </style>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Product Image</th>
-      <th scope="col">Price</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    @forelse($products as $key => $product)
-    <tr>
-      <th scope="row">{{++$key}}</th>
-      <td>{{$product->name}}</td>
-      <td><img  src="{{'http://localhost/mywebsite/storage/app/image/'.$product->image}}" class="image" /></td>
+<script>
+  const deleteRouteTemplate = "{{ route('product.destroy', ':id') }}";
+</script>
 
-      <td>{{$product->price}}</td>
-      <td>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Products</h3>
+        <button class="btn btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Add New Product</button>
+    </div>
 
-      </td>
-    </tr>
-    @empty
-    <tr>
-        <td> no product found !</td>
-    </tr>
-    @endforelse
-  </tbody>
-</table>
+    <div class="products-grid">
+        @forelse($products as $product)
+        <div class="product-card" data-id="{{ $product->id }}"
+             data-name="{{ $product->name }}"
+             data-price="{{ $product->price }}"
+             data-image="{{ asset('images/' . $product->image) }}"
+             data-description="{{ $product->description }}">
+            <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}">
+            <div class="product-info">
+                <h5>{{ $product->name }}</h5>
+                <p>{{ Str::limit($product->description, 50) }}</p>
+                <div class="product-price">₹{{ $product->price }}</div>
+            </div>
+            <div class="product-actions">
+                <button class="btn btn-warning btn-sm editProductBtn"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn btn-danger btn-sm deleteProductBtn"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+        </div>
+        @empty
+        <p class="text-muted text-center">No products found!</p>
+        @endforelse
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h4 id="modalTitle">Add New Product</h4>
+
+      <form id="productForm" method="POST" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="_method" id="formMethod" value="POST">
+          <input type="hidden" name="product_id" id="productId" value="">
+
+          <div class="form-group">
+              <label>Product Name <small class="text-danger">*</small></label>
+              <input type="text" name="name" id="productName" required>
+          </div>
+
+          <div class="form-group">
+              <label>Product Price <small class="text-danger">*</small></label>
+              <input type="number" name="price" id="productPrice" required>
+          </div>
+
+          <div class="form-group">
+              <label>Product Description</label>
+              <textarea name="description" id="productDescription" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+              <label>Product Image</label>
+              <input type="file" name="image" id="productImage" accept="image/*">
+              <div id="imagePreview" style="margin-top:10px;">
+                  <img id="previewImg" src="" alt="Image Preview" style="max-width: 100%; max-height: 200px; display:none; border-radius:8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+      </form>
+  </div>
+</div>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this product?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 @endsection
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<script>
+$(document).ready(function(){
+
+const modal = $('#productModal');
+const form = $('#productForm');
+const previewImg = $('#previewImg');
+
+// Image Preview
+$('#productImage').change(function(){
+    const file = this.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            previewImg.attr('src', e.target.result).show();
+        }
+        reader.readAsDataURL(file);
+    } else {
+        previewImg.hide();
+    }
+});
+
+// Open Add Product Modal
+$('#addProductBtn').click(function(){
+    $('#modalTitle').text('Add New Product');
+    $('#formMethod').val('POST');
+    form.attr('action', "{{ route('product.store') }}");
+    $('#productId').val('');
+    $('#productName').val('');
+    $('#productPrice').val('');
+    $('#productDescription').val('');
+    $('#productImage').val('');
+    previewImg.hide();
+    modal.fadeIn();
+});
+
+// Open Edit Product Modal
+$('.editProductBtn').click(function(e){
+    e.stopPropagation();
+    const card = $(this).closest('.product-card');
+
+    $('#modalTitle').text('Edit Product');
+    $('#formMethod').val('PUT');
+    form.attr('action', "{{ url('product') }}/" + card.data('id'));
+    $('#productId').val(card.data('id'));
+    $('#productName').val(card.data('name'));
+    $('#productPrice').val(card.data('price'));
+    $('#productDescription').val(card.data('description'));
+    $('#productImage').val('');
+    
+    // Show current product image
+    previewImg.attr('src', card.data('image')).show();
+    modal.fadeIn();
+});
+
+
+let deleteProductId = null;
+
+// When delete button is clicked
+$(document).on('click', '.deleteProductBtn', function(e){
+    e.stopPropagation();
+
+    const card = $(this).closest('.product-card');
+    deleteProductId = card.data('id');
+
+    const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    modal.show();
+});
+
+// When confirm delete is clicked
+$('#confirmDeleteBtn').on('click', function(){
+    if(!deleteProductId) return;
+
+    let deleteUrl = deleteRouteTemplate.replace(':id', deleteProductId);
+
+    const form = $('<form>', {
+        method: 'POST',
+        action: deleteUrl
+    });
+
+    form.append('<input type="hidden" name="_token" value="{{ csrf_token() }}">');
+    form.append('<input type="hidden" name="_method" value="DELETE">');
+
+    $('body').append(form);
+    form.submit();
+});
+
+
+// Close Modal
+$('.modal-close').click(function(){
+    modal.fadeOut();
+});
+
+// Click outside modal closes
+modal.click(function(e){
+    if(e.target.id === 'productModal'){
+        modal.fadeOut();
+    }
+});
+
+
+// Close modal on Cancel button
+$('.modal-cancel').on('click', function(){
+    $('#productModal').fadeOut();
+});
+
+// Close modal when clicking on X
+$('.modal-close').on('click', function(){
+    $('#productModal').fadeOut();
+});
+
+// Close modal when clicking outside the modal content
+$('#productModal').on('click', function(e){
+    if ($(e.target).is('#productModal')) {
+        $('#productModal').fadeOut();
+    }
+});
+
+});
+
+</script>
+
