@@ -19,6 +19,8 @@ class Order extends Model
         'items',
         'total_amount',
         'status',
-        'shipping_address'
+        'shipping_address',
+        'stripe_payment_id',
+        'stripe_payment_intent_id'
     ];
 }

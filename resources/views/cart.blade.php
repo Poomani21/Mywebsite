@@ -180,11 +180,41 @@ a.disabled {
 
 </style>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe("{{ config('services.stripe.key') }}");
+</script>
 
 <section class="gradient-custom">
   <div class="container">
     <div class="row justify-content-center">
       
+     <!-- Payment Status Messages -->
+    <div id="payment-loading" class="alert alert-info d-none">
+      Processing your payment... Please wait ⏳
+    </div>
+
+    <div id="payment-success" class="alert alert-success d-none">
+      ✅ Payment successful! Your order is being created...
+    </div>
+
+    <div id="payment-error" class="alert alert-danger d-none">
+      ❌ Payment failed. <span id="payment-error-message"></span>
+    </div>
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            ❌ {{ session('error') }}
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            ✅ {{ session('success') }}
+        </div>
+    @endif
+
+
       <!-- Cart Items Column -->
       <div class="col-lg-8">
         <div class="card mb-4">
@@ -348,6 +378,20 @@ a.disabled {
               Go to Checkout via Paypal
             </a>
 
+            <form action="#" method="POST" id="card-payment-form">
+              @csrf
+          
+              <input type="hidden" name="stripeToken" id="stripeToken">
+              <input type="hidden" name="address_id" id="card_address_id" value="">
+          
+              <button type="button" id="payWithCardBtn" class="btn btn-success w-100 disabled" aria-disabled="true">
+                  Pay with Card
+              </button>
+          </form>
+          
+          
+          
+
             <button class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#addressModal" id="addressButton">
               Add Address
             </button>
@@ -402,7 +446,28 @@ a.disabled {
     </div>
   </div>
 
-  
+  <!-- Card Payment Modal -->
+<div class="modal fade" id="cardModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Card Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="card-element" class="form-control"></div>
+        <div id="card-errors" class="text-danger mt-2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmCardPayment" class="btn btn-primary">
+          Pay Now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
   
 </section>
 
@@ -445,6 +510,15 @@ a.disabled {
 
               btn.classList.remove('disabled');
               btn.removeAttribute('aria-disabled');
+
+              // ✅ Enable Card button too
+              const cardBtn = document.getElementById('payWithCardBtn');
+              cardBtn.classList.remove('disabled');
+              cardBtn.removeAttribute('aria-disabled');
+
+              // ✅ Set address_id for card form
+              document.getElementById('card_address_id').value = addressId;
+
               $('#addressButton').hide();
               
             } else {
@@ -459,6 +533,8 @@ a.disabled {
                 $('#checkoutBtn')
                 .addClass('disabled')
                 .attr('aria-disabled', 'true');
+                $('#payWithCardBtn').addClass('disabled').attr('aria-disabled', 'true');
+
                 $('#addressButton').show();
                
             }
@@ -477,7 +553,15 @@ $(document).ready(function () {
             return false;
         }
     });
+    $('#payWithCardBtn').on('click', function (e) {
+        if ($(this).hasClass('disabled')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
 });
+
 
 
     document.querySelectorAll('.qty-btn').forEach(btn => {
@@ -530,7 +614,81 @@ $(document).ready(function () {
             .catch(err => console.error(err));
         });
     });
-    </script>
+
+   
+
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    // Open modal on button click
+    document.getElementById('payWithCardBtn').addEventListener('click', function () {
+        const modal = new bootstrap.Modal(document.getElementById('cardModal'));
+        modal.show();
+    });
+
+    // Handle payment
+    document.getElementById('confirmCardPayment').addEventListener('click', async function () {
+        const payBtn = this;
+        payBtn.disabled = true;
+        payBtn.innerText = 'Processing...';
+
+        // 1️⃣ Create PaymentIntent from Laravel
+        const res = await fetch("{{ route('stripe.intent') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                address_id: document.getElementById('card_address_id').value
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+            alert(data.error);
+            payBtn.disabled = false;
+            payBtn.innerText = 'Pay Now';
+            return;
+        }
+
+        // 2️⃣ Confirm card payment
+        const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+            payment_method: { card: card }
+        });
+
+        if (error) {
+            alert(error.message);
+            payBtn.disabled = false;
+            payBtn.innerText = 'Pay Now';
+        } else if (paymentIntent.status === 'succeeded') {
+            // 3️⃣ Redirect to success route (like PayPal)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ route('stripe.success') }}";
+
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = '_token';
+            csrf.value = "{{ csrf_token() }}";
+
+            const pi = document.createElement('input');
+            pi.type = 'hidden';
+            pi.name = 'payment_intent_id';
+            pi.value = paymentIntent.id;
+
+            form.appendChild(csrf);
+            form.appendChild(pi);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+
+
+
+  </script>
     
     
   

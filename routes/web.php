@@ -11,12 +11,29 @@ use App\Http\Controllers\OrderController;
   
 //Auth routes
 
-Route::get('/', [AuthController::class, 'index'])->name('login');
+Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
 Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
 Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard'); 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/', [ProductController::class, 'productList'])->name('products.list');
+
+Route::view('/policy/return', 'policies.return')->name('policy.return');
+Route::view('/policy/terms', 'policies.terms')->name('policy.terms');
+Route::view('/policy/privacy', 'policies.privacy')->name('policy.privacy');
+Route::view('/policy/security', 'policies.security')->name('policy.security');
+
+
+Route::view('/help', 'pages.help')->name('help');
+Route::view('/payments', 'pages.payments')->name('payments');
+Route::view('/shipping', 'pages.shipping')->name('shipping');
+Route::view('/cancellation', 'pages.cancellation')->name('cancellation');
+Route::view('/returns', 'pages.returns')->name('returns');
+Route::view('/about-us', 'pages.about')->name('about');
+Route::view('/contact-us', 'pages.contact')->name('contact');
+
+
 
 
 /*
@@ -30,10 +47,10 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 |
 */
 
-
 /*Route::get('/', function () {
     return view('welcome');
 });*/
+Route::get('home', [ProductController::class, 'productList'])->name('products.list');
 
 Route::middleware('auth')->group(function() {
 
@@ -49,7 +66,7 @@ Route::get('/cart/total-quantity', [CartController::class, 'getTotalQuantity'])-
 
 //product routes
 
-Route::get('home', [ProductController::class, 'productList'])->name('products.list');
+
 Route::get('productCreate', [ProductController::class, 'productCreate'])->name('product.create');
 Route::post('productStore', [ProductController::class, 'productStore'])->name('product.store');
 Route::get('productlist', [ProductController::class, 'index'])->name('product.index');
@@ -89,6 +106,9 @@ Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index'
 Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
 Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+Route::post('/pay-with-card', [PaypalController::class, 'payWithCard'])->name('stripe.intent');
+Route::post('/stripe/success', [PaypalController::class, 'stripeSuccess'])->name('stripe.success');
 
 
 

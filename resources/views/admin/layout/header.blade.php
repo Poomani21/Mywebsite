@@ -113,6 +113,23 @@
     border-top: 1px solid #eee;
 }
 
+.guest-link {
+    color: #111;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+.guest-link:hover {
+    background-color: #f0f2f5;
+    color: #000;
+    text-decoration: none;
+}
+
+.register-btn:hover {
+    background-color: #e9ecef;
+}
 
 
 </style>
@@ -180,6 +197,27 @@
           </li>
       </ul>
       @endauth
+
+      @guest
+        <ul class="navbar-nav ms-auto d-flex flex-row align-items-center gap-3">
+
+            <li class="nav-item">
+                <a href="{{ route('login') }}" class="nav-link d-flex align-items-center guest-link">
+                    <i class="fas fa-user me-1"></i>
+                    <span class="d-none d-md-inline">Login</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('register') }}" class="nav-link d-flex align-items-center guest-link register-btn">
+                    <i class="fas fa-user-plus me-1"></i>
+                    <span class="d-none d-md-inline">Register</span>
+                </a>
+            </li>
+
+        </ul>
+      @endguest
+
 
     </div>
   </div>

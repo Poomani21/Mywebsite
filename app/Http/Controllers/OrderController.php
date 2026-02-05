@@ -23,7 +23,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::where('_id', $id)
-                    ->select(['_id', 'paypal_order_id', 'status', 'created_at', 'items', 'total_amount'])
+                    ->select(['_id', 'paypal_order_id', 'status', 'created_at', 'items', 'total_amount','stripe_payment_id'])
                     ->firstOrFail();
 
         // If items store product_id, fetch products once

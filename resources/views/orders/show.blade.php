@@ -52,7 +52,7 @@
     <div class="order-info">
         <div>
             <p><strong>Order ID:</strong> {{ $order->_id }}</p>
-            <p><strong>Payment ID:</strong> {{ $order->paypal_order_id }}</p>
+            <p><strong>Payment ID:</strong> {{ $order->paypal_order_id ?? $order->stripe_payment_id }}</p>
         </div>
         <div>
             <p><strong>Status:</strong> <span class="status">{{ ucfirst($order->status) }}</span></p>

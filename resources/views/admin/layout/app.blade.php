@@ -55,4 +55,98 @@
 .icon-hover:hover i {
   color: #3b71ca !important;
 }
+
+.policy-page {
+    background: #f5f6f8;
+    padding: 40px 0;
+    min-height: 70vh;
+}
+
+.policy-container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 35px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.policy-container h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #232f3e; /* matches your header */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ff9900;
+    padding-bottom: 10px;
+}
+
+.policy-container h2 {
+    font-size: 18px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #111;
+    font-weight: 600;
+}
+
+.policy-container p,
+.policy-container li {
+    color: #555;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.policy-container ul {
+    padding-left: 20px;
+}
+
+.policy-container li {
+    margin-bottom: 8px;
+}
+
+
+.help-page {
+    background: #f5f6f8;
+    padding: 40px 0;
+    min-height: 70vh;
+}
+
+.help-container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 35px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.help-container h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #232f3e; /* matches your header */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ff9900;
+    padding-bottom: 10px;
+}
+
+.help-container h2 {
+    font-size: 18px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #111;
+    font-weight: 600;
+}
+
+.help-container p,
+.help-container li {
+    color: #555;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.help-container ul {
+    padding-left: 20px;
+}
+
+.help-container li {
+    margin-bottom: 8px;
+}
+
 </style>
+
+
