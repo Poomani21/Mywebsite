@@ -73,6 +73,16 @@ class CartController extends Controller
         return redirect()->route('cart.list');
     }
 
+    public function remove(Request $request)
+    {
+        \Cart::remove($request->id);
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+
     public function clearAllCart()
     {
         \Cart::clear();

@@ -195,22 +195,26 @@ a.disabled {
     </div>
 
     <div id="payment-success" class="alert alert-success d-none">
-      ✅ Payment successful! Your order is being created...
+      Payment successful! Your order is being created...
     </div>
 
     <div id="payment-error" class="alert alert-danger d-none">
-      ❌ Payment failed. <span id="payment-error-message"></span>
+       Payment failed. <span id="payment-error-message"></span>
     </div>
 
+    <div id="selectAddress-error" class="alert alert-danger d-none">
+      Please select the delivery address.
+   </div>
+
     @if(session('error'))
-        <div class="alert alert-danger">
-            ❌ {{ session('error') }}
+        <div  id="flash-error" class="alert alert-danger">
+             {{ session('error') }}
         </div>
     @endif
 
     @if(session('success'))
-        <div class="alert alert-success">
-            ✅ {{ session('success') }}
+        <div  id="flash-success" class="alert alert-success">
+             {{ session('success') }}
         </div>
     @endif
 
@@ -389,8 +393,7 @@ a.disabled {
               </button>
           </form>
           
-          
-          
+          <br>
 
             <button class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#addressModal" id="addressButton">
               Add Address
@@ -468,11 +471,41 @@ a.disabled {
   </div>
 </div>
 
-  
+
+<div class="modal fade" id="removeConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Remove item?</h5>
+        
+        <button type="button" class="btn-close" id="removeModalClose" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        
+          <p>Are you sure you want to remove this item from your cart?</p>
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelRemoveBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmRemoveBtn">Yes, Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </section>
 
+
+  
 <script>
 
+$(document).ready(function () {
+      setTimeout(function () {
+          $('#flash-success').fadeOut('slow');
+          $('#flash-error').fadeOut('slow');
+      }, 5000); // 5 seconds
+  });
 
 
   document.getElementById('addressSelect')?.addEventListener('change', function () {
@@ -562,6 +595,50 @@ $(document).ready(function () {
 
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+
+     
+   
+  let pendingRemoveId = null; // store which item to remove
+
+  const removeModalEl = document.getElementById('removeConfirmModal');
+  const removeModal = new bootstrap.Modal(removeModalEl);
+
+  const confirmRemoveBtn = document.getElementById('confirmRemoveBtn');
+  const cancelRemoveBtn = document.getElementById('cancelRemoveBtn');
+
+  // Cancel button → just hide modal
+  cancelRemoveBtn.addEventListener('click', function () {
+      pendingRemoveId = null;
+      removeModal.hide();
+  });
+
+  // Confirm remove
+  confirmRemoveBtn.addEventListener('click', function () {
+      if (!pendingRemoveId) return;
+
+      fetch("{{ route('cart.remove.list') }}", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": "{{ csrf_token() }}"
+          },
+          body: JSON.stringify({ id: pendingRemoveId })
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.success) {
+              // Redirect to home (or reload cart)
+              window.location.href = "{{ url('/') }}";
+          } else {
+              alert("Failed to remove item");
+          }
+      })
+      .catch(err => console.error(err));
+
+      pendingRemoveId = null;
+      removeModal.hide();
+  });
 
 
     document.querySelectorAll('.qty-btn').forEach(btn => {
@@ -571,6 +648,15 @@ $(document).ready(function () {
             const input = this.parentElement.querySelector('.qty-input');
     
             let currentQty = parseInt(input.value);
+            // If clicking "-" when qty is 1 → remove item
+    
+            if (action === 'decrease' && currentQty === 1) {
+                // Open custom modal instead of confirm()
+                pendingRemoveId = id;
+                removeModal.show();
+                console.log("removeModal",removeModal)
+                return;
+            }
     
             if (action === 'increase') {
                 currentQty++;
@@ -623,6 +709,26 @@ $(document).ready(function () {
 
     // Open modal on button click
     document.getElementById('payWithCardBtn').addEventListener('click', function () {
+
+      const addressValue = $('#addressSelect').val();
+      console.log("addressValue",addressValue)
+      
+      if (!addressValue) {
+
+        $('#selectAddress-error').removeClass('d-none');
+
+        // Scroll to the error message smoothly
+        $('html, body').animate({
+            scrollTop: $('#selectAddress-error').offset().top - 20
+        }, 500);
+    
+        setTimeout(() => {
+              $('#selectAddress-error').addClass('d-none');
+        }, 5000);
+
+        return;
+        
+      }
         const modal = new bootstrap.Modal(document.getElementById('cardModal'));
         modal.show();
     });
@@ -687,6 +793,9 @@ $(document).ready(function () {
     });
 
 
+
+
+  });
 
   </script>
     

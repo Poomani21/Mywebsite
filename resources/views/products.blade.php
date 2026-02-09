@@ -87,6 +87,11 @@
 }
 </style>
 
+<script>
+    window.IS_LOGGED_IN = {{ auth()->check() ? 'true' : 'false' }};
+</script>
+
+
 <section>
 <div class="container my-5">
   <header class="mb-4">
@@ -166,6 +171,20 @@
   </div>
 </div>
 
+<!-- Login Required Modal -->
+<div class="cart-modal" id="loginModal">
+    <div class="cart-modal-content">
+      <span class="cart-modal-close" id="loginModalClose">&times;</span>
+      <h5>Login Required</h5>
+      <p>You need to login to add items to your cart.</p>
+      <div class="mt-3">
+        <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+        <button class="btn btn-secondary" id="loginContinueShopping">Close</button>
+      </div>
+    </div>
+  </div>
+
+  
 @endsection
 
 <script>
@@ -190,6 +209,13 @@ let cartProducts = {}; // { productId: quantity }
 document.querySelectorAll('.add-to-cart-form').forEach(form => {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+         // If not logged in, show login popup
+         if (!window.IS_LOGGED_IN) {
+            const loginModal = document.getElementById('loginModal');
+            loginModal.style.display = 'block';
+            return; // stop here, don't call API
+        }
 
         const formData = new FormData(this);
         const productId = formData.get('id');
@@ -297,6 +323,13 @@ document.addEventListener('click', function (e) {
     const btn = e.target.closest('.product-cart-count-btn');
     if (!btn) return;
 
+     // If not logged in, show login popup
+     if (!window.IS_LOGGED_IN) {
+        const loginModal = document.getElementById('loginModal');
+        loginModal.style.display = 'block';
+        return;
+    }
+
     const qty = parseInt(btn.getAttribute('data-qty')) || 0;
 
     if (qty > 0) {
@@ -304,6 +337,31 @@ document.addEventListener('click', function (e) {
     } 
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const loginModal = document.getElementById('loginModal');
+    const loginModalClose = document.getElementById('loginModalClose');
+    const loginContinueShopping = document.getElementById('loginContinueShopping');
+
+    // Close when clicking X
+    loginModalClose.addEventListener('click', function () {
+        loginModal.style.display = 'none';
+    });
+
+    // Close when clicking Close button
+    loginContinueShopping.addEventListener('click', function () {
+        loginModal.style.display = 'none';
+    });
+
+    // Close when clicking outside the modal content
+    loginModal.addEventListener('click', function (e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+
+});
 
 
 </script>
