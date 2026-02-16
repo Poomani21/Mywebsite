@@ -6,8 +6,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install zip mbstring
 
-# ✅ Install compatible MongoDB extension version
-RUN pecl install mongodb-1.21.3 \
+# MongoDB extension
+RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -17,11 +17,11 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache \
- && php artisan migrate --force || true \
- && php artisan db:seed --force || true
-
 EXPOSE 10000
-CMD php artisan serve --host=0.0.0.0 --port=10000
+
+CMD php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php artisan migrate --force && \
+    php artisan db:seed --force && \
+    php artisan serve --host=0.0.0.0 --port=10000
