@@ -97,11 +97,15 @@ class AddressController extends Controller
          $deliveryPincode  = $address->pincode;
      
          // Get the document that contains Sheet1
-         $doc = DB::connection('mongodb')
-             ->collection('allPincodes')
-             ->where('_id', new \MongoDB\BSON\ObjectId('6982fc4466ce1a0f4a184fa8'))
-             ->first();
+        //  $doc = DB::connection('mongodb')
+        //      ->collection('allPincodes')
+        //      ->where('_id', new \MongoDB\BSON\ObjectId('6982fc4466ce1a0f4a184fa8'))
+        //      ->first();
      
+        $doc = DB::connection('mongodb')
+         ->collection('allPincodes')
+         ->first();
+         
          if (!$doc || empty($doc['Sheet1'])) {
              return response()->json([
                  'success' => false,
