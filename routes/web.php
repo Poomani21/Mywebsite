@@ -53,6 +53,15 @@ Route::view('/contact-us', 'pages.contact')->name('contact');
 Route::get('home', [ProductController::class, 'productList'])->name('products.list');
 Route::get('/', [ProductController::class, 'productList'])->name('products.list');
 
+Route::get('/mongo-test', function () {
+    \App\Models\Product::create([
+        'name' => 'Render Test',
+        'price' => 123
+    ]);
+    return 'Mongo OK';
+});
+
+
 Route::middleware('auth')->group(function() {
 
 //cart routes
