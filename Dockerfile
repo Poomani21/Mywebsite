@@ -17,14 +17,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY . .
 
-RUN cp .env.example .env || true
-
-RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-req=ext-mongodb
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 EXPOSE 10000
 
-CMD php artisan key:generate --force \
- && php artisan config:clear \
+CMD php artisan config:clear \
  && php artisan cache:clear \
  && php artisan migrate --force || true \
  && php artisan db:seed --force || true \
