@@ -51,6 +51,7 @@ Route::view('/contact-us', 'pages.contact')->name('contact');
     return view('welcome');
 });*/
 Route::get('home', [ProductController::class, 'productList'])->name('products.list');
+Route::get('/', [ProductController::class, 'productList'])->name('products.list');
 
 Route::middleware('auth')->group(function() {
 
