@@ -98,11 +98,8 @@ return [
             'driver' => 'mongodb',
             'dsn' => env('MONGODB_URI'),
             'database' => env('DB_DATABASE', 'Mywebsite'),
-            'use_mongo_id' => false,
-                'options' => [
-                    'database' => 'admin',
-                ]
         ],
+
 
 
     ],
