@@ -1,25 +1,30 @@
 FROM php:8.2-cli
 
-# System deps (ADD libonig-dev)
+# Install system dependencies (ALL required libs)
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev zip libssl-dev pkg-config \
-    autoconf g++ make libonig-dev
+    git unzip \
+    libzip-dev zip \
+    libssl-dev \
+    libonig-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
+    autoconf g++ make
 
-# PHP extensions
+# Install PHP extensions
 RUN docker-php-ext-install zip mbstring curl
 
-# Mongo extension
+# Install MongoDB extension
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
 COPY . .
 
-# Install Laravel deps without scripts
+# Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 EXPOSE 10000
