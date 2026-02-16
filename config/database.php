@@ -93,19 +93,17 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+      
         'mongodb' => [
             'driver' => 'mongodb',
-            // 'dsn'      => 'mongodb://'.env('DB_HOST', 'localhost').':'.env('DB_PORT', 27017),
             'dsn' => env('MONGODB_URI'),
             'database' => env('DB_DATABASE', 'Mywebsite'),
-            // 'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
             'use_mongo_id' => false,
-            'options' => [
-                'database' => 'admin',
-            ]
+                'options' => [
+                    'database' => 'admin',
+                ]
         ],
+
 
     ],
 
