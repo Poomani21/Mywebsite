@@ -3,12 +3,16 @@ FROM php:8.2-cli
 # Install system + build dependencies
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev zip libssl-dev pkg-config \
-    autoconf g++ make \
-    && docker-php-ext-install zip
+    autoconf g++ make
+
+# Install PHP extensions
+RUN docker-php-ext-install zip mbstring curl
 
 # Install MongoDB extension
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
+# Verify MongoDB loaded (important)
+RUN php -m | grep mongodb
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
