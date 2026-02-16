@@ -1,9 +1,9 @@
 FROM php:8.2-cli
 
-# System deps
+# System deps (ADD libonig-dev)
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev zip libssl-dev pkg-config \
-    autoconf g++ make
+    autoconf g++ make libonig-dev
 
 # PHP extensions
 RUN docker-php-ext-install zip mbstring curl
@@ -19,7 +19,7 @@ WORKDIR /var/www
 
 COPY . .
 
-# Install Laravel deps WITHOUT scripts
+# Install Laravel deps without scripts
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 EXPOSE 10000
