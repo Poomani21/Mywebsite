@@ -21,7 +21,8 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 EXPOSE 10000
 
-CMD php artisan config:clear \
+CMD php artisan key:generate --force \
+ && php artisan config:clear \
  && php artisan cache:clear \
  && php artisan migrate --force || true \
  && php artisan db:seed --force || true \
