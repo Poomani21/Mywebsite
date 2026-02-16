@@ -2,28 +2,30 @@ FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev zip \
-    && docker-php-ext-install zip pdo pdo_mysql
+    git unzip libzip-dev zip libssl-dev pkg-config \
+    && docker-php-ext-install zip
+
+# Install MongoDB PHP extension
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www
 
-# Copy project files
 COPY . .
 
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Cache Laravel config/routes/views
+# Laravel setup (cache + migrate + seed)
 RUN php artisan config:cache \
  && php artisan route:cache \
- && php artisan view:cache
+ && php artisan view:cache \
+ && php artisan migrate --force \
+ && php artisan db:seed --force
 
-# Expose Render port
 EXPOSE 10000
 
-# Start Laravel server
 CMD php artisan serve --host=0.0.0.0 --port=10000
