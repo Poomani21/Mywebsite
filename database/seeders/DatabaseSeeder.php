@@ -15,19 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        \App\Models\User::updateOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'role' => 'Admin',
+                'created_at' => new UTCDateTime(Carbon::now()->getTimestamp()*1000),
+                'updated_at' => new UTCDateTime(Carbon::now()->getTimestamp()*1000),
+            ]
+        );
 
-        \App\Models\User::create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password'),
-            'role' => 'Admin',
-            'created_at' => new UTCDateTime(Carbon::now()->getTimestamp()*1000),
-            'updated_at' => new UTCDateTime(Carbon::now()->getTimestamp()*1000),
-        ]);
-        
-        $this->call([
-            ProductSeeder::class,
-           
-        ]);
+        if (\App\Models\Product::count() == 0) {
+            $this->call([
+                ProductSeeder::class,
+            ]);
+        }
     }
+
 }
