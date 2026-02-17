@@ -109,9 +109,38 @@ margin-left: 4px;
 
     <!--Custom styles-->
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
 <body>
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+            toastr.error("{{ $errors->first() }}");
+        });
+        </script>
+    @endif
+    @if (session('success'))
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "5000"
+    };
+    toastr.success("{{ session('success') }}");
+});
+</script>
+@endif
 
     <div class="container">
         <div class="d-flex justify-content-center h-100">
@@ -134,9 +163,9 @@ margin-left: 4px;
                             </div>
                             <input type="email" id="email_address" class="form-control" name="email"
                                 placeholder="Email Address" value="" required>
-                                @if ($errors->has('email'))
+                                {{-- @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
-                            @endif
+                            @endif --}}
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
@@ -144,9 +173,9 @@ margin-left: 4px;
                             </div>
                             <input type="password" id="password" class="form-control" name="password"
                                 placeholder="password" required>
-                                @if ($errors->has('password'))
+                                {{-- @if ($errors->has('password'))
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
-                            @endif
+                            @endif --}}
 
                         </div>
                         <div class="input-group form-group">
@@ -155,9 +184,9 @@ margin-left: 4px;
                             </div>
                             <input type="password" id="confirm-password" class="form-control" name="confirm-password"
                                 placeholder="confirm password" required>
-                                @if ($errors->has('confirm-password'))
+                                {{-- @if ($errors->has('confirm-password'))
                                 <span class="text-danger">{{ $errors->first('confirm-password') }}</span>
-                            @endif
+                            @endif --}}
 
                         </div>
                         <!-- <div class="row align-items-center remember">

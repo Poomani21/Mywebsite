@@ -109,9 +109,38 @@ margin-left: 4px;
 
     <!--Custom styles-->
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
 <body>
+    @if ($errors->any())
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+            toastr.error("{{ $errors->first() }}");
+        });
+        </script>
+    @endif
+    @if (session('success'))
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "5000"
+    };
+    toastr.success("{{ session('success') }}");
+});
+</script>
+@endif
+
 
     <div class="container">
         <div class="d-flex justify-content-center h-100">
@@ -135,9 +164,9 @@ margin-left: 4px;
                             </div>
                             <input type="text" id="name" class="form-control" name="name"
                                 placeholder="User Name" required autofocus>
-                                @if ($errors->has('name'))
+                                {{-- @if ($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
-                            @endif
+                            @endif --}}
                         </div>
 
 
@@ -147,9 +176,9 @@ margin-left: 4px;
                             </div>
                             <input type="email" id="email_address" class="form-control" name="email"
                                 placeholder="Email Address" required autofocus>
-                                @if ($errors->has('email'))
+                                {{-- @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
-                            @endif
+                            @endif --}}
                         </div>
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
@@ -157,16 +186,32 @@ margin-left: 4px;
                             </div>
                             <input type="password" id="password" class="form-control" name="password"
                                 placeholder="password" required>
-                                @if ($errors->has('password'))
+                                {{-- @if ($errors->has('password'))
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
-                            @endif
+                            @endif --}}
 
                         </div>
                         <!-- <div class="row align-items-center remember">
                             <input type="checkbox" name="remember">Remember Me
                         </div> -->
-                        <div class="form-group" style=" margin: auto;width: 50%;padding: 10px;">
+                        <div>
+                        <a href="{{ route('products.list') }}"
+                        class="float-left"
+                        style="color: #FFC312">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                fill="currentColor"
+                                viewBox="0 0 18 18"
+                                class="mr-2">
+                                <path fill-rule="evenodd"
+                                    d="M15 8a.5.5 0 0 1-.5.5H3.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 
+                                    0-.708l4-4a.5.5 0 1 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z"/>
+                            </svg>Go Back
+                        </a>
+                        <div class="form-group" style=" ">
                             <input type="submit" value="Register" class="btn float-right login_btn">
+                        </div>
                         </div>
                     </form>
                 </div>
@@ -176,7 +221,7 @@ margin-left: 4px;
                         I have already an account?<a href="{{ route('login') }}">Login</a>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <a href="#">Forgot your password?</a>
+                        <a href="{{ route('forgotPassword') }}">Forgot your password?</a>
                     </div>
                 </div>
             </div>

@@ -21,6 +21,14 @@ class Order extends Model
         'status',
         'shipping_address',
         'stripe_payment_id',
-        'stripe_payment_intent_id'
+        'stripe_payment_intent_id',
+        'ordered_device',
+        'canceled_device'
     ];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID', '_id');
+    }
+
 }

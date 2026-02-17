@@ -109,9 +109,27 @@ margin-left: 4px;
 
     <!--Custom styles-->
     <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 </head>
 
 <body>
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+            toastr.error("{{ $errors->first() }}");
+        });
+        </script>
+    @endif
 
     <div class="container">
         <div class="d-flex justify-content-center h-100">
@@ -124,6 +142,7 @@ margin-left: 4px;
                         <span><i class="fab fa-twitter-square"></i></span>
                     </div>
                 </div>
+
                 <div class="card-body">
                     <form action="{{ route('login.post') }}" method="POST">
                         @method('POST')
@@ -153,9 +172,26 @@ margin-left: 4px;
                         <div class="row align-items-center remember">
                             <input type="checkbox" name="remember">Remember Me
                         </div>
+                        
+                       <div>
+                            <a href="{{ route('products.list') }}"
+                                class="float-left"
+                                style="color: #FFC312">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        fill="currentColor"
+                                        viewBox="0 0 18 18"
+                                        class="mr-2">
+                                        <path fill-rule="evenodd"
+                                            d="M15 8a.5.5 0 0 1-.5.5H3.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 
+                                            0-.708l4-4a.5.5 0 1 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z"/>
+                                    </svg>Go Back
+                                </a>
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn float-right login_btn">
                         </div>
+                    </div>
                     </form>
                 </div>
 
@@ -164,7 +200,7 @@ margin-left: 4px;
                         Don't have an account?<a href="{{ route('register') }}">Sign Up</a>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <a href="#">Forgot your password?</a>
+                        <a href="{{ route('forgotPassword') }}">Forgot your password?</a>
                     </div>
                 </div>
             </div>

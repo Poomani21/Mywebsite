@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Invoice</title>
+    <title>Orders Report</title>
 
     <style>
         body {
@@ -80,11 +80,18 @@
         .meta {
             margin-bottom: 3px;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 
 <body>
 
+@foreach ($orders as $order)
+
+    {{-- HEADER --}}
     <div class="header">
         <div class="company">My Shop Pvt Ltd</div>
         <div>123, My Street, Chennai, Tamil Nadu - 600001</div>
@@ -108,8 +115,10 @@
             <div class="meta"><strong>Order ID:</strong> {{ $order->_id }}</div>
             <div class="meta"><strong>PayPal ID:</strong> {{ $order->paypal_order_id }}</div>
             <div class="meta"><strong>Status:</strong> {{ ucfirst($order->status) }}</div>
-            <div class="meta"><strong>Date:</strong>
-                {{ \Carbon\Carbon::parse($order->created_at)->format('d M Y H:i') }}</div>
+            <div class="meta">
+                <strong>Date:</strong>
+                {{ \Carbon\Carbon::parse($order->created_at)->format('d M Y H:i') }}
+            </div>
         </div>
         <div class="clear"></div>
     </div>
@@ -137,16 +146,19 @@
                 <th>Total</th>
             </tr>
         </thead>
+
         <tbody>
             @php
                 $i = 1;
                 $subtotal = 0;
             @endphp
+
             @foreach ($order->items as $item)
                 @php
                     $line = $item['price'] * $item['qty'];
                     $subtotal += $line;
                 @endphp
+
                 <tr>
                     <td>{{ $i++ }}</td>
                     <td>{{ $item['name'] }}</td>
@@ -169,7 +181,7 @@
         </tfoot>
     </table>
 
-    {{-- DEVICE INFO --}}
+    {{-- ORDER DEVICE --}}
     <div class="section-title">Order Device</div>
     <div>
         Type: {{ $order->ordered_device['type'] ?? 'N/A' }} |
@@ -181,6 +193,7 @@
         {{ $order->ordered_device['country'] ?? 'N/A' }}
     </div>
 
+    {{-- CANCEL DEVICE --}}
     @if (isset($order->canceled_device))
         <div class="section-title">Cancellation Device</div>
         <div>
@@ -198,6 +211,10 @@
         Thank you for shopping with us !
     </p>
 
-</body>
+    {{-- PAGE BREAK --}}
+    <div class="page-break"></div>
 
+@endforeach
+
+</body>
 </html>

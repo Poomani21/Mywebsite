@@ -7,16 +7,20 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\OrderController;
-
-  
 //Auth routes
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
 Route::get('registration', [AuthController::class, 'registration'])->name('register');
-Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
-Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard'); 
-// Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
+
+Route::get('forgot-password', [AuthController::class, 'showForgotForm'])
+        ->name('forgotPassword');
+
+Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
+        ->name('forgotPassword.post');
+
+Route::get('dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 Route::match(['get','post'], 'logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', [ProductController::class, 'productList'])->name('products.list');
 
@@ -122,6 +126,6 @@ Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('or
 Route::post('/pay-with-card', [PaypalController::class, 'payWithCard'])->name('stripe.intent');
 Route::post('/stripe/success', [PaypalController::class, 'stripeSuccess'])->name('stripe.success');
 
-
+Route::get('exportPdf', [OrderController::class, 'exportPdf'])->name('orders.pdf');
 
 });

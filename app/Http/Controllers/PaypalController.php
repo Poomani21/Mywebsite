@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DeviceLocationHelper;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\Session\Session;
@@ -194,6 +195,10 @@ class PaypalController extends Controller
                 'pincode' => $address->pincode,
             ],
         ]);
+
+        $registerData = DeviceLocationHelper::getDeviceLocationData($request);
+        Order::where('_id', $order->_id)
+            ->update(['ordered_device' => $registerData]);
     
         \Cart::clear(); // empty cart after order
     
@@ -372,7 +377,7 @@ class PaypalController extends Controller
         // Create order
         $order = Order::create([
             'userID' => $userID,
-            'stripe_payment_id' => $request->get('payment_intent_id'),              // ✅ THIS is what you want
+            'stripe_payment_id' => $request->get('payment_intent_id'),
             'items' => $items,
             'total_amount' => \Cart::getTotal(),
             'status' => 'paid',
@@ -384,6 +389,9 @@ class PaypalController extends Controller
                 'pincode' => $address->pincode,
             ],
         ]);
+        $registerData = DeviceLocationHelper::getDeviceLocationData($request);
+        Order::where('_id', $order->_id)
+            ->update(['ordered_device' => $registerData]);
 
         \Cart::clear(); // empty cart after order
 

@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Models\User;
 use Hash;
-  
+use Jenssegers\Agent\Agent;
+use App\Helpers\DeviceLocationHelper;
+use MongoDB\BSON\UTCDateTime;
+use Illuminate\Support\Carbon;
 class AuthController extends Controller
 {
     /**
@@ -42,21 +45,32 @@ class AuthController extends Controller
      *
      * @return response()
      */
-    public function postLogin(LoginRequest $request)
+    public function postLogin(Request $request)
     {
        
-        // $request->validate([
-        //     'email' => 'required',
-        //     'password' => 'required',
-        // ]);
+               
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
    
+
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
+
+            $loginData = DeviceLocationHelper::getDeviceLocationData($request);
+
+            User::where('_id', Auth::id())
+                ->update([
+                    'login_device' => $loginData,
+                    'last_login_at' => new UTCDateTime(Carbon::now()->getTimestamp()*1000)
+                ]);
+
             return redirect()->intended('home')
                         ->withSuccess('You have Successfully loggedin');
         }
   
-        return redirect("login")->withSuccess('Oppes! You have entered invalid credentials');
+        return redirect("login")->withErrors('Oppes! You have entered invalid credentials')->withInput();
     }
       
     /**
@@ -73,15 +87,19 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
            
-        $data = $request->all();
-        $check = $this->create($data);
+
+        $user = $this->create($request->all());
+        $registerData = DeviceLocationHelper::getDeviceLocationData($request);
+
+        User::where('_id', $user->_id)
+            ->update(['register_device' => $registerData]);
          
         if(Auth::check()){
             return redirect("home")->withSuccess('Great! You have Successfully loggedin');
 
         }
         
-            return redirect("login")->withSuccess('Opps! You do not have access');
+        return redirect("login")->withSuccess('Opps! You do not have access')->withInput();
         
     }
     
@@ -124,5 +142,26 @@ class AuthController extends Controller
         Auth::logout();
   
         return Redirect('/');
+    }
+
+    public function showForgotForm()
+    {
+        return view('auth.forgotPassword');
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:6|same:confirm-password',
+            'confirm-password' => 'required'
+        ]);
+
+        User::where('email', $request->email)->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return redirect()->route('login')
+            ->with('success', 'Password reset successful. Please login.');
     }
 }
