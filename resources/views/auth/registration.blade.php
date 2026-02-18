@@ -4,6 +4,14 @@
 
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
+.card-body{
+    flex: 1 1 auto;
+}
+
+.card-footer{
+    margin-top: auto;
+}
+
 html,body{
 background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
 background-size: cover;
@@ -18,11 +26,13 @@ align-content: center;
 }
 
 .card{
-height: 370px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
+min-height: 370px;
 background-color: rgba(0,0,0,0.5) !important;
+display: flex;
+flex-direction: column;
 }
 
 .social_icon span{
@@ -89,6 +99,83 @@ color: white;
 .links a{
 margin-left: 4px;
 }
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 576px) {
+
+html, body {
+    background-position: center;
+    background-size: cover;
+}
+
+.card {
+    width: 90%;
+    height: auto;
+    margin: 20px;
+    padding-bottom: 15px;
+}
+
+.card-header h3 {
+    font-size: 22px;
+    text-align: center;
+}
+
+.social_icon {
+    position: static;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.social_icon span {
+    font-size: 40px;
+    margin: 0 8px;
+}
+
+.input-group-prepend span {
+    width: 40px;
+    font-size: 14px;
+}
+
+.form-control {
+    font-size: 14px;
+    height: 40px;
+}
+
+.login_btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.links {
+    text-align: center;
+    font-size: 14px;
+}
+
+.links a {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.float-left {
+    float: none !important;
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.float-right {
+    float: none !important;
+}
+}
+@media (max-width: 576px){
+
+.card{
+    width: 95%;
+    margin: 15px auto;
+}
+
+}
+
 </style>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -111,6 +198,8 @@ margin-left: 4px;
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 
 <body>
@@ -143,8 +232,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     <div class="container">
-        <div class="d-flex justify-content-center h-100">
-            <div class="card" style="height: 383px;">
+        <div class="d-flex justify-content-center h-77">
+            <div class="card" style="">
                 <div class="card-header">
                     <h3>Register</h3>
                     <div class="d-flex justify-content-end social_icon">

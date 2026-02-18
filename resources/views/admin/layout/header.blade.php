@@ -132,99 +132,39 @@
 }
 
 
-/* ===== MOBILE HORIZONTAL NAV ===== */
+
+/* ===== MOBILE AVATAR DROPDOWN FIX (STABLE NAVBAR) ===== */
 @media (max-width: 991px) {
 
-.navbar-toggler {
-    display: none !important; /* hide toggle */
-}
-
+/* keep navbar normal */
 .navbar-collapse {
-    display: flex !important;
-    flex-basis: auto;
-    overflow-x: auto;
-    white-space: nowrap;
+    overflow: visible !important;
 }
 
-.navbar-nav {
-    flex-direction: row !important;
-    gap: 8px;
-}
-
-.navbar-nav .nav-item {
-    flex: 0 0 auto;
-}
-
-.main-nav .nav-link {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: none;
-}
-
-/* avatar compact */
-.user-avatar {
-    width: 28px;
-    height: 28px;
-    font-size: 11px;
-}
-
-/* remove dropdown background block */
-.nav-item.dropdown .nav-link {
-    background: transparent !important;
-}
-
-}
-/* ===== MOBILE DROPDOWN FIX (NO SCROLL CUT) ===== */
-@media (max-width: 991px) {
-
-.navbar-collapse {
-    overflow-x: auto;
-    position: static; /* allow children to escape */
-}
-
-.nav-item.dropdown {
-    position: static; /* important */
-}
-
-.user-dropdown-menu {
-    position: fixed !important;
-    right: 10px;
-    top: 60px; /* below navbar */
-    width: 200px;
-    z-index: 99999;
-}
-
-}
-/* ===== FIX AVATAR DROPDOWN IN MOBILE HORIZONTAL NAV ===== */
-@media (max-width: 991px) {
-
+/* dropdown parent */
 .nav-item.dropdown {
     position: relative;
 }
 
+/* dropdown menu */
 .user-dropdown-menu {
     position: absolute !important;
-    right: 0;
-    top: 40px;
-    width: 180px;
+    right: 10px;
+    top: calc(100% + 10px);
+    min-width: 200px;
     border-radius: 10px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    z-index: 9999;
-}
-
-/* prevent navbar stretch */
-.navbar-nav {
-    align-items: center;
-}
-
-/* avatar spacing */
-.nav-item.dropdown .nav-link {
-    padding: 6px 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    z-index: 1050;
 }
 
 }
 
-
+/* SHOW TOGGLER ON MOBILE */
+@media (max-width: 991px) {
+  .navbar-toggler {
+      display: block !important;
+  }
+}
 
 
 </style>
@@ -233,10 +173,15 @@
 <nav class="navbar navbar-expand-lg main-nav">
   <div class="container">
     <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+       <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+       <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+       <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+   </svg></i>
     </button>
 
-    <div class="navbar-collapse" id="mainNav">
+    <div class="collapse navbar-collapse" id="mainNav">
 
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -271,7 +216,7 @@
       @auth
       <ul class="navbar-nav ms-auto">
           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-lg-end" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="user-avatar">
 
                     @php
@@ -302,24 +247,25 @@
       @endauth
 
       @guest
-      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <ul class="navbar-nav ms-auto">
 
             <li class="nav-item">
                 <a href="{{ route('login') }}" class="nav-link d-flex align-items-center guest-link">
                     <i class="fas fa-user me-1"></i>
-                    <span class="d-none d-md-inline">Login</span>
+                    <span>Login</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a href="{{ route('register') }}" class="nav-link d-flex align-items-center guest-link register-btn">
                     <i class="fas fa-user-plus me-1"></i>
-                    <span class="d-none d-md-inline">Register</span>
+                    <span>Register</span>
                 </a>
             </li>
 
         </ul>
       @endguest
+
 
 
     </div>

@@ -89,6 +89,58 @@ color: white;
 .links a{
 margin-left: 4px;
 }
+
+/* 📱 Mobile responsive */
+@media (max-width: 576px) {
+
+.card {
+    width: 95% !important;   /* full width on mobile */
+    height: auto !important; /* auto height */
+    margin: 20px auto;
+}
+
+.card-header h3 {
+    font-size: 22px;
+    text-align: center;
+}
+
+.social_icon {
+    position: static;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.social_icon span {
+    font-size: 30px;
+    margin: 0 5px;
+}
+
+.input-group-prepend span {
+    width: 40px;
+}
+
+.form-group {
+    width: 100% !important;
+    padding: 0;
+}
+
+.login_btn {
+    width: 100%;
+}
+
+.links {
+    text-align: center;
+    flex-direction: column;
+}
+
+.links a {
+    margin-left: 0;
+    margin-top: 5px;
+    display: inline-block;
+}
+}
+
+
 </style>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -111,6 +163,7 @@ margin-left: 4px;
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
@@ -143,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
 @endif
 
     <div class="container">
-        <div class="d-flex justify-content-center h-100">
+        <div class="d-flex justify-content-center h-55">
             <div class="card" style="height: 383px;">
                 <div class="card-header">
                     <h3>Forgot Password</h3>

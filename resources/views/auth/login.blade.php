@@ -18,7 +18,7 @@ align-content: center;
 }
 
 .card{
-height: 370px;
+min-height: 370px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
@@ -89,6 +89,93 @@ color: white;
 .links a{
 margin-left: 4px;
 }
+
+/* ============================= */
+/* MOBILE RESPONSIVE LOGIN FIX   */
+/* ============================= */
+@media (max-width: 576px) {
+
+body, html {
+    background-position: center;
+    background-size: cover;
+}
+
+.container {
+    padding: 15px;
+}
+
+.card {
+    width: 100%;
+    height: auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 12px;
+}
+
+.card-header h3 {
+    font-size: 20px;
+    text-align: center;
+}
+
+.social_icon {
+    position: static;
+    margin-top: 10px;
+    justify-content: center !important;
+}
+
+.social_icon span {
+    font-size: 32px;
+    margin: 0 6px;
+}
+
+.input-group-prepend span {
+    width: 40px;
+    font-size: 14px;
+}
+
+.form-control {
+    font-size: 14px;
+    padding: 10px;
+}
+
+.remember {
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.login_btn {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.card-footer {
+    text-align: center;
+    font-size: 14px;
+}
+
+.links {
+    flex-direction: column;
+    gap: 6px;
+}
+
+.links a {
+    margin-left: 0;
+}
+
+/* Go back link mobile */
+.float-left {
+    float: none !important;
+    display: block;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.float-right {
+    float: none !important;
+}
+}
+
+
 </style>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -112,6 +199,7 @@ margin-left: 4px;
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
 
@@ -132,7 +220,7 @@ margin-left: 4px;
     @endif
 
     <div class="container">
-        <div class="d-flex justify-content-center h-100">
+        <div class="d-flex justify-content-center h-60">
             <div class="card">
                 <div class="card-header">
                     <h3>Sign In</h3>
