@@ -332,6 +332,7 @@ $('#saveAccount').click(function () {
             if (errors.name) $('.error-name').text(errors.name[0]);
             if (errors.email) $('.error-email').text(errors.email[0]);
             if (errors.password) $('.error-password').text(errors.password[0]);
+            if (errors.image) $('.error-image').text(errors.image[0]);  // ADD THIS
         }
     });
 

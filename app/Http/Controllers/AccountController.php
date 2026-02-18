@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Storage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class AccountController extends Controller
 {
@@ -21,10 +24,13 @@ class AccountController extends Controller
         $user = Auth::user();
         $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $user->_id . ',_id',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user->_id, '_id')
+            ],
             'password' => 'nullable|min:6|confirmed',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:102400'
-
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp'
         ]);
 
         $user->name = $request->name;
@@ -34,21 +40,39 @@ class AccountController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        //IMAGE UPLOAD
+        // Render-safe upload
         if ($request->hasFile('image')) {
 
-            // delete old image
+            Storage::disk('public')->makeDirectory('profile_images');
+        
+            // delete old
             if ($user->image && Storage::disk('public')->exists('profile_images/'.$user->image)) {
                 Storage::disk('public')->delete('profile_images/'.$user->image);
             }
-
+        
             $file = $request->file('image');
-            $filename = 'user_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
-
-            $file->storeAs('profile_images', $filename, 'public');
-
+        
+            $filename = 'user_'.time().'_'.uniqid().'.jpg';
+            $path = storage_path('app/public/profile_images/'.$filename);
+        
+            // Intervention v3
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file->getRealPath());
+        
+            // resize avatar
+            $image->scale(width: 300);
+        
+            // compress loop ≤4KB
+            $quality = 90;
+            do {
+                $image->toJpeg($quality)->save($path);
+                $size = filesize($path);
+                $quality -= 5;
+            } while ($size > 4096 && $quality > 10);
+        
             $user->image = $filename;
         }
+        
         $user->save();
 
         return response()->json([
