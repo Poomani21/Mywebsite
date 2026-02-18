@@ -13,7 +13,14 @@ class DeviceLocationHelper
     {
         $agent = new Agent();
 
-        $ip = $request->ip();
+         //Get real client IP behind proxy
+        $ip = $request->header('X-Forwarded-For');
+
+        if ($ip) {
+            $ip = explode(',', $ip)[0];
+        } else {
+            $ip = $request->ip();
+        }
 
         if ($ip === '127.0.0.1' || $ip === '::1') {
             $ip = env('LOCATION_TESTING_IP', '8.8.8.8');

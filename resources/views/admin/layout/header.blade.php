@@ -132,6 +132,101 @@
 }
 
 
+/* ===== MOBILE HORIZONTAL NAV ===== */
+@media (max-width: 991px) {
+
+.navbar-toggler {
+    display: none !important; /* hide toggle */
+}
+
+.navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.navbar-nav {
+    flex-direction: row !important;
+    gap: 8px;
+}
+
+.navbar-nav .nav-item {
+    flex: 0 0 auto;
+}
+
+.main-nav .nav-link {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+}
+
+/* avatar compact */
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+}
+
+/* remove dropdown background block */
+.nav-item.dropdown .nav-link {
+    background: transparent !important;
+}
+
+}
+/* ===== MOBILE DROPDOWN FIX (NO SCROLL CUT) ===== */
+@media (max-width: 991px) {
+
+.navbar-collapse {
+    overflow-x: auto;
+    position: static; /* allow children to escape */
+}
+
+.nav-item.dropdown {
+    position: static; /* important */
+}
+
+.user-dropdown-menu {
+    position: fixed !important;
+    right: 10px;
+    top: 60px; /* below navbar */
+    width: 200px;
+    z-index: 99999;
+}
+
+}
+/* ===== FIX AVATAR DROPDOWN IN MOBILE HORIZONTAL NAV ===== */
+@media (max-width: 991px) {
+
+.nav-item.dropdown {
+    position: relative;
+}
+
+.user-dropdown-menu {
+    position: absolute !important;
+    right: 0;
+    top: 40px;
+    width: 180px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    z-index: 9999;
+}
+
+/* prevent navbar stretch */
+.navbar-nav {
+    align-items: center;
+}
+
+/* avatar spacing */
+.nav-item.dropdown .nav-link {
+    padding: 6px 10px;
+}
+
+}
+
+
+
+
 </style>
 
 
@@ -141,7 +236,8 @@
       <i class="fas fa-bars"></i>
     </button>
 
-    <div class="collapse navbar-collapse" id="mainNav">
+    <div class="navbar-collapse" id="mainNav">
+
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" href="{{ route('products.list') }}">Home</a>
@@ -175,9 +271,16 @@
       @auth
       <ul class="navbar-nav ms-auto">
           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-lg-end" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <div class="user-avatar">
-                      {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(strrchr(auth()->user()->name, " "), 1)) }}
+
+                    @php
+                      $name = auth()->user()->name;
+                      $parts = explode(' ', $name);
+                      $initials = strtoupper(substr($parts[0],0,1) . (isset($parts[1]) ? substr($parts[1],0,1) : ''));
+                    @endphp
+                    {{ $initials }}
+
                   </div>
                   <span class="ms-2 d-none d-md-inline">{{ auth()->user()->name }}</span>
               </a>
@@ -199,7 +302,7 @@
       @endauth
 
       @guest
-        <ul class="navbar-nav ms-auto d-flex flex-row align-items-center gap-3">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
 
             <li class="nav-item">
                 <a href="{{ route('login') }}" class="nav-link d-flex align-items-center guest-link">

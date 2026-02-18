@@ -188,14 +188,6 @@
             display: none;
         }
 
-        /* Mobile */
-        @media (max-width: 600px) {
-            .pagination-bar {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
 
         .filter-bar {
             display: flex;
@@ -211,6 +203,163 @@
         .filter-bar select {
             width: 180px;
         }
+
+        /* ===============================
+   MOBILE ORDERS PAGE FULL FIX
+   ===============================*/
+@media (max-width: 768px) {
+
+/* container spacing */
+.container {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* pagination center + stack */
+.pagination,
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pagination li,
+.page-item {
+    margin: 2px;
+}
+
+/* result text center */
+.results-count,
+.showing-results {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+/* ===== ORDER CARD ===== */
+.order-card {
+    padding: 14px;
+    border-radius: 12px;
+}
+
+/* top row stack */
+.order-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px;
+}
+
+/* product block */
+.product-block {
+    width: 100%;
+}
+
+/* image */
+.product-img {
+    width: 65px;
+    height: 65px;
+}
+
+/* name */
+.product-name {
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+/* meta */
+.product-meta,
+.order-meta {
+    font-size: 13px;
+}
+
+/* divider */
+.order-divider {
+    margin: 10px 0;
+}
+
+/* ===== CUSTOMER + PRICE ROW FIX ===== */
+.order-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left !important;
+}
+
+/* customer/email wrap */
+.user-meta {
+    font-size: 13px;
+    word-break: break-all;
+}
+
+/* price full width */
+.order-price {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ===== BUTTONS ROW ===== */
+.order-actions .btn {
+    flex: 1;
+    min-width: 100px;
+    margin: 4px 6px 0 0;
+}
+
+.order-actions .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* make buttons full width on very small */
+@media (max-width: 480px) {
+    .order-actions .btn {
+        flex: 100%;
+    }
+}
+
+}
+
+/* ===== TOP PAGINATION MOBILE FIX ===== */
+@media (max-width: 768px) {
+
+.top-pagination,
+.pagination-top,
+.results-pagination {
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+/* showing text */
+.top-pagination .results-text,
+.pagination-top .results-text,
+.results-pagination .results-text {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #666;
+}
+
+/* pagination buttons wrapper */
+.top-pagination .pagination,
+.pagination-top .pagination,
+.results-pagination .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* buttons */
+.pagination .page-link {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 6px;
+}
+
+}
+
+
     </style>
 
 
@@ -382,14 +531,14 @@
         @endif
 
         {{-- BOTTOM PAGINATION --}}
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
+        <div class="pagination-bar">
+            <div class="pagination-info">
                 Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }}
-                of {{ $orders->total() }} orders
+                of {{ $orders->total() }} results
             </div>
 
-            <div>
-                {{ $orders->links('pagination::bootstrap-5') }}
+            <div class="pagination-links">
+                {{ $orders->links() }}
             </div>
         </div>
 
