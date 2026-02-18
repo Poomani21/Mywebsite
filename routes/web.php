@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -127,5 +128,11 @@ Route::post('/pay-with-card', [PaypalController::class, 'payWithCard'])->name('s
 Route::post('/stripe/success', [PaypalController::class, 'stripeSuccess'])->name('stripe.success');
 
 Route::get('exportPdf', [OrderController::class, 'exportPdf'])->name('orders.pdf');
+
+//Account Info Routes
+Route::get('accountInfo', [AccountController::class, 'edit'])->name('account.info');
+Route::post('accountInfo/update', [AccountController::class, 'update'])->name('account.update');
+Route::delete('accountInfo/delete', [AccountController::class, 'destroy'])->name('account.delete');
+
 
 });

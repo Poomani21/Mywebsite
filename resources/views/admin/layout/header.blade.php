@@ -72,6 +72,13 @@
     transition: all 0.2s ease-in-out;
 }
 
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .user-avatar:hover {
     transform: scale(1.1);
 }
@@ -165,6 +172,13 @@
       display: block !important;
   }
 }
+@media (max-width: 576px) {
+    .user-avatar {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+}
 
 
 </style>
@@ -220,17 +234,36 @@
                   <div class="user-avatar">
 
                     @php
-                      $name = auth()->user()->name;
-                      $parts = explode(' ', $name);
-                      $initials = strtoupper(substr($parts[0],0,1) . (isset($parts[1]) ? substr($parts[1],0,1) : ''));
+                        $user = auth()->user();
+                        $name = $user->name ?? '';
+                        $parts = explode(' ', $name);
+                        $initials = strtoupper(
+                            substr($parts[0],0,1) .
+                            (isset($parts[1]) ? substr($parts[1],0,1) : '')
+                        );
                     @endphp
-                    {{ $initials }}
+
+                     @if($user->image && file_exists(public_path('storage/profile_images/'.$user->image)))
+                     <img src="{{ asset('storage/profile_images/'.$user->image) }}"
+                              alt="avatar">
+                      @else
+                          {{ $initials }}
+                      @endif
 
                   </div>
                   <span class="ms-2 d-none d-md-inline">{{ auth()->user()->name }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown">
-                  <li><a class="dropdown-item" href="{{ route('orders.index') }}">My Orders</a></li>
+
+                <li>
+                  <a class="dropdown-item" href="{{ route('account.info') }}">
+                
+                  My Account Info
+                  
+                 </a>
+                </li>
+
+                  
                   <li><hr class="dropdown-divider"></li>
                   <li>
                       <a class="dropdown-item logout-btn" href="{{ route('logout') }}"

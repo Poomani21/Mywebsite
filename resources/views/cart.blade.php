@@ -177,10 +177,16 @@ a.disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
+#toast-container {
+    z-index: 999999 !important;
+    pointer-events: auto;
+}
+
 
 </style>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
+
 <script>
   const stripe = Stripe("{{ config('services.stripe.key') }}");
 </script>
@@ -205,6 +211,10 @@ a.disabled {
     <div id="selectAddress-error" class="alert alert-danger d-none">
       Please select the delivery address.
    </div>
+
+   <div  id="choose-error" class="alert alert-danger d-none">
+    Please add and select the address then click checkout
+  </div>
 
     @if(session('error'))
         <div  id="flash-error" class="alert alert-danger">
@@ -496,8 +506,6 @@ a.disabled {
 
 </section>
 
-
-  
 <script>
 
 $(document).ready(function () {
@@ -580,18 +588,44 @@ $(document).ready(function () {
   <script>
 
 $(document).ready(function () {
-    $('#checkoutBtn').on('click', function (e) {
-        if ($(this).hasClass('disabled')) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    $('#payWithCardBtn').on('click', function (e) {
-        if ($(this).hasClass('disabled')) {
-            e.preventDefault();
-            return false;
-        }
-    });
+
+
+function checkAddressSelected() {
+    console.log("checkAddressSelected called");
+
+    const addressValue = $('#addressSelect').val();
+
+    if (!addressValue || addressValue == null) {
+
+        $('#choose-error').removeClass('d-none');
+        return false;
+    } else {
+      $('#choose-error').addClass('d-none');
+        return true;
+    }
+}
+
+// ✅ CALL ON PAGE LOAD
+checkAddressSelected();
+
+// ✅ HIDE TOAST WHEN ADDRESS SELECTED
+$('#addressSelect').on('change', function () {
+  $('#choose-error').addClass('d-none');
+});
+
+// ✅ CHECK BEFORE PAYPAL
+$('#checkoutBtn').on('click', function (e) {
+    if (!checkAddressSelected()) {
+        e.preventDefault();
+    }
+});
+
+// ✅ CHECK BEFORE CARD
+$('#payWithCardBtn').on('click', function (e) {
+    if (!checkAddressSelected()) {
+        e.preventDefault();
+    }
+});
 
 });
 
