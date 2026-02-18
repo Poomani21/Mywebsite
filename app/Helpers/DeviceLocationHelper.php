@@ -5,7 +5,8 @@ namespace App\Helpers;
 use Jenssegers\Agent\Agent;
 use Stevebauman\Location\Facades\Location;
 use Illuminate\Http\Request;
-
+use MongoDB\BSON\UTCDateTime;
+use Illuminate\Support\Carbon;
 class DeviceLocationHelper
 {
     public static function getDeviceLocationData(Request $request): array
@@ -33,7 +34,7 @@ class DeviceLocationHelper
             'lon' => $position->longitude ?? null,
             'timezone' => $position->timezone ?? null,
 
-            'time' => now(),
+            'time' => new UTCDateTime(Carbon::now()->getTimestamp()*1000),
         ];
     }
 }
