@@ -40,35 +40,29 @@ class AccountController extends Controller
 
             $file = $request->file('image');
         
-            $filename = 'user_'.time().'_'.uniqid().'.jpg';
+            $filename = 'user_' . time() . '_' . uniqid() . '.jpg';
         
-            // ensure directory exists
-            $dir = storage_path('app/public/profile_images');
-            if (!file_exists($dir)) {
-                mkdir($dir, 0775, true);
-            }
+            // ensure directory exists (Laravel way)
+            Storage::disk('public')->makeDirectory('profile_images');
         
-            $path = $dir.'/'.$filename;
+            $tempPath = storage_path('app/public/profile_images/' . $filename);
         
             // Intervention v3
-            $manager = new \Intervention\Image\ImageManager(
-                new \Intervention\Image\Drivers\Gd\Driver()
-            );
-        
+            $manager = new ImageManager(new Driver());
             $image = $manager->read($file->getRealPath());
             $image->scale(width: 300);
         
             // compress loop
             $quality = 85;
             do {
-                $image->toJpeg($quality)->save($path);
-                $size = filesize($path);
+                $image->toJpeg($quality)->save($tempPath);
+                $size = filesize($tempPath);
                 $quality -= 5;
-            } while ($size > 4096 && $quality > 20);
+            } while ($size > 409600 && $quality > 20); // 400KB safer than 4KB
         
-            // delete old
-            if ($user->image && file_exists($dir.'/'.$user->image)) {
-                unlink($dir.'/'.$user->image);
+            // delete old image (Laravel way)
+            if ($user->image && Storage::disk('public')->exists('profile_images/' . $user->image)) {
+                Storage::disk('public')->delete('profile_images/' . $user->image);
             }
         
             $user->image = $filename;
