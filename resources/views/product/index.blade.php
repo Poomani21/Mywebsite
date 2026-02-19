@@ -165,40 +165,313 @@
 @media(max-width:768px){
     .product-card img { height: 150px; }
 }
+/* ===== Header Layout ===== */
+.products-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+/* Title */
+.page-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 36px;   /* match button height */
+}
+
+/* Filter Bar */
+.filter-bar {
+    display: flex;
+    align-items: center;   /* vertical align */
+    gap: 8px;
+}
+
+/* SAME HEIGHT FOR ALL CONTROLS */
+.filter-bar input,
+.btn-filter,
+.btn-reset,
+.btn-add {
+    height: 36px;
+    box-sizing: border-box;
+}
+
+/* Input */
+.filter-bar input {
+    padding: 6px 10px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    width: 260px;
+    font-size: 14px;
+}
+
+/* Search */
+.btn-filter {
+    padding: 0 14px;
+    background: #2d6cdf;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Reset */
+.btn-reset {
+    padding: 0 12px;
+    border: 1px solid #ccc;
+    background: #f3f3f3;
+    border-radius: 4px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+/* Add */
+.btn-add {
+    padding: 0 16px;
+    background: #2d6cdf;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Hover */
+.btn-filter:hover,
+.btn-add:hover {
+    background: #1f57c3;
+}
+
+
+/* ===== Pagination Top ===== */
+.pagination-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 6px;
+}
+
+.result-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.pagination-box {
+    display: flex;
+}
+
+/* ===== Pagination Bottom ===== */
+.pagination-bottom {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+    .products-header {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .filter-bar {
+        flex-wrap: wrap;
+    }
+
+    .filter-bar input {
+        width: 100%;
+    }
+
+    .btn-add {
+        width: 100%;
+    }
+    .pagination-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;   /* keep same line */
+        gap: 8px;
+        width: 100%;
+    }
+
+    .result-text {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .pagination-box {
+        display: flex;
+    }
+
+    .pagination-box .pagination {
+        margin: 0;
+    }
+}
+
+.pagination-box p.small.text-muted {
+            display: none;
+        }
+        .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state img {
+    width: 120px;
+    opacity: 0.8;
+    margin-bottom: 20px;
+}
+
+.empty-state h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #2c2c2c;
+}
+
+.empty-state p {
+    color: #6c757d;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.btn-reset-filter {
+    border: 1px solid #2d6cdf;
+    color: #2d6cdf;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.btn-reset-filter:hover {
+    background: #2d6cdf;
+    color: #fff;
+}
+
 </style>
 <script>
   const deleteRouteTemplate = "{{ route('product.destroy', ':id') }}";
 </script>
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Products</h3>
-        <button class="btn btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Add New Product</button>
-    </div>
+    <div class="products-header">
 
-    <div class="products-grid">
-        @forelse($products as $product)
-        <div class="product-card" data-id="{{ $product->id }}"
-             data-name="{{ $product->name }}"
-             data-price="{{ $product->price }}"
-             data-image="{{ asset('images/' . $product->image) }}"
-             data-description="{{ $product->description }}">
-            <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}">
-            <div class="product-info">
-                <h5>{{ $product->name }}</h5>
-                <p>{{ Str::limit($product->description, 50) }}</p>
-                <div class="product-price">₹{{ $product->price }}</div>
-            </div>
-            <div class="product-actions">
-                <button class="btn btn-warning btn-sm editProductBtn"><i class="fas fa-edit"></i> Edit</button>
-                <button class="btn btn-danger btn-sm deleteProductBtn"><i class="fas fa-trash"></i> Delete</button>
-            </div>
-        </div>
-        @empty
-        <p class="text-muted text-center">No products found!</p>
-        @endforelse
+        <!-- LEFT: Title -->
+        <h4 class="page-title">Products</h4>
+    
+        <!-- CENTER: Search + Reset -->
+        <form method="GET" action="{{ route('product.index') }}" class="filter-bar">
+    
+            <input type="text"
+                   name="search"
+                   value="{{ request('search') }}"
+                   placeholder="Search by product name">
+    
+            <button type="submit" class="btn-filter">Search</button>
+    
+            @if(request()->filled('search'))
+                <a href="{{ route('product.index') }}" class="btn-reset">Reset</a>
+            @endif
+    
+        </form>
+    
+        <!-- RIGHT: Add -->
+        <button class="btn-add" id="addProductBtn">
+            Add Product
+        </button>
+    
+    </div>
+    
+    
+    @if($products->hasPages())
+<div class="pagination-top">
+    <span class="result-text">
+        Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results
+    </span>
+
+    <div class="pagination-box">
+        {{ $products->withQueryString()->links() }}
     </div>
 </div>
+@endif
+
+
+    <div class="products-grid">
+        @if($products->count() > 0)
+    
+            @foreach($products as $product)
+            <div class="product-card" data-id="{{ $product->_id }}"
+                 data-name="{{ $product->name }}"
+                 data-price="{{ $product->price }}"
+                 data-image="{{ asset('images/' . $product->image) }}"
+                 data-description="{{ $product->description }}">
+                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}">
+                <div class="product-info">
+                    <h5>{{ $product->name }}</h5>
+                    <p>{{ Str::limit($product->description, 50) }}</p>
+                    <div class="product-price">₹{{ $product->price }}</div>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-warning btn-sm editProductBtn">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger btn-sm deleteProductBtn">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+            @endforeach
+    
+        @else
+    
+        @if($products->count() == 0)
+        <div class="empty-state">
+        
+            <img src="{{ asset('images/nodata.png') }}" alt="No products">
+        
+            @if(request()->filled('search'))
+                <h4>No products found</h4>
+                <p>No matching products for your search.</p>
+        
+                <a href="{{ route('product.index') }}" class="btn-reset-filter">
+                    Reset Filters
+                </a>
+            @else
+                <h4>No products available</h4>
+                <p>There are no products added yet.</p>
+            @endif
+        
+        </div>
+        @endif
+        
+    
+        @endif
+    </div>
+    
+  
+
+
+</div>
+
+@if($products->hasPages())
+<div class="pagination-top">
+    <span class="result-text">
+        Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} results
+    </span>
+
+    <div class="pagination-box">
+        {{ $products->withQueryString()->links() }}
+    </div>
+</div>
+@endif
+
 
 <!-- Modal -->
 <!-- Modal -->

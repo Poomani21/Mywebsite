@@ -243,8 +243,8 @@
                         );
                     @endphp
 
-                     @if($user->image && file_exists(public_path('storage/profile_images/'.$user->image)))
-                     <img src="{{ asset('storage/profile_images/'.$user->image) }}"
+                     @if($user->image && file_exists(public_path('images/'.$user->image)))
+                     <img src="{{ asset('images/'.$user->image) }}"
                               alt="avatar">
                       @else
                           {{ $initials }}

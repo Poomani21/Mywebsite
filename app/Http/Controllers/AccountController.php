@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
+use Illuminate\Support\Facades\File;
 class AccountController extends Controller
 {
     
@@ -25,7 +25,7 @@ class AccountController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'password' => 'nullable|min:6|confirmed',
-            // 'image' => 'nullable|image|mimes:jpg,jpeg,png,webp'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $user->name = $request->name;
@@ -36,37 +36,27 @@ class AccountController extends Controller
         }
 
         // Render-safe upload
-        // if ($request->hasFile('image')) {
+        $path = public_path('images');
 
-        //     $file = $request->file('image');
-        
-        //     $filename = 'user_' . time() . '_' . uniqid() . '.jpg';
-        
-        //     // ensure directory exists (Laravel way)
-        //     Storage::disk('public')->makeDirectory('profile_images');
-        
-        //     $tempPath = storage_path('app/public/profile_images/' . $filename);
-        
-        //     // Intervention v3
-        //     $manager = new ImageManager(new Driver());
-        //     $image = $manager->read($file->getRealPath());
-        //     $image->scale(width: 300);
-        
-        //     // compress loop
-        //     $quality = 85;
-        //     do {
-        //         $image->toJpeg($quality)->save($tempPath);
-        //         $size = filesize($tempPath);
-        //         $quality -= 5;
-        //     } while ($size > 409600 && $quality > 20); // 400KB safer than 4KB
-        
-        //     // delete old image (Laravel way)
-        //     if ($user->image && Storage::disk('public')->exists('profile_images/' . $user->image)) {
-        //         Storage::disk('public')->delete('profile_images/' . $user->image);
-        //     }
-        
-        //     $user->image = $filename;
-        // }
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0777, true, true);
+        }
+
+        // If new image uploaded, replace old one
+        if ($request->hasFile('image')) {
+
+            // Delete old image if exists
+            if ($user->image && File::exists($path . '/' . $user->image)) {
+                File::delete($path . '/' . $user->image);
+            }
+
+            $fileExtension = $request->file('image')->getClientOriginalExtension();
+            $fileName = 'user_image_' . time() . '_' . uniqid() . '.' . $fileExtension;
+
+            $request->file('image')->move($path, $fileName);
+
+            $user->image = $fileName;
+        }
         
         $user->save();
 

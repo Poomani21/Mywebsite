@@ -142,8 +142,8 @@
             </p>
             
             
-            {{-- <img src="{{ $user->image ? asset('storage/profile_images/'.$user->image) : asset('images/default-user.png') }}"
-            style="width:100px;height:100px;border-radius:50%;object-fit:cover"> --}}
+            <img src="{{ $user->image ? asset('images/'.$user->image) : asset('images/default-user.png') }}"
+            style="width:100px;height:100px;border-radius:50%;object-fit:cover">
         </div>
     </div>
 
@@ -230,16 +230,16 @@
                         <input type="password" name="password_confirmation" class="form-control">
                     </div>
 
-                    {{-- <div class="mb-3 text-center">
+                    <div class="mb-3 text-center">
                         <img id="profilePreview"
-                             src="{{ $user->image ? asset('storage/profile_images/'.$user->image) : asset('images/default-user.png') }}"
+                             src="{{ $user->image ? asset('images/'.$user->image) : asset('images/default-user.png') }}"
                              style="width:100px;height:100px;border-radius:50%;object-fit:cover">
                     
                         <div class="mt-2">
                             <input type="file" name="image" id="imageInput" class="form-control">
                             <small class="text-danger error-image"></small>
                         </div>
-                    </div> --}}
+                    </div>
                     
 
                 </form>
@@ -347,7 +347,7 @@ $('#saveAccount').click(function () {
 
                 if (errors.name) $('.error-name').text(errors.name[0]);
                 if (errors.password) $('.error-password').text(errors.password[0]);
-                // if (errors.image) $('.error-image').text(errors.image[0]);
+                if (errors.image) $('.error-image').text(errors.image[0]);
 
             } else {
                 
@@ -369,20 +369,20 @@ $('.text-danger').text('');
 
 });
 
-// $('#imageInput').on('change', function (e) {
+$('#imageInput').on('change', function (e) {
 
-// const file = e.target.files[0];
-// if (!file) return;
+const file = e.target.files[0];
+if (!file) return;
 
-// const reader = new FileReader();
+const reader = new FileReader();
 
-// reader.onload = function (e) {
-//     $('#profilePreview').attr('src', e.target.result);
-// };
+reader.onload = function (e) {
+    $('#profilePreview').attr('src', e.target.result);
+};
 
-// reader.readAsDataURL(file);
+reader.readAsDataURL(file);
 
-// });
+});
 
 
 

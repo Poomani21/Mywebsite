@@ -74,12 +74,29 @@ class ProductController extends Controller
     }
 
 
-    public function index()
+    // public function index()
+    // {
+    //     $products = Product::all();
+
+    //     return view('product.index', compact('products'));
+    // }
+
+    public function index(Request $request)
     {
-        $products = Product::all();
+        $query = Product::query();
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        // Pagination (MongoDB supports paginate)
+        $products = $query->orderBy('created_at', 'desc')->paginate(8);
 
         return view('product.index', compact('products'));
     }
+
 
     public function productUpdate(ProductRequest $request, $id)
     {
