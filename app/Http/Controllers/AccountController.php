@@ -25,7 +25,7 @@ class AccountController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'password' => 'nullable|min:6|confirmed',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp'
+            // 'image' => 'nullable|image|mimes:jpg,jpeg,png,webp'
         ]);
 
         $user->name = $request->name;
@@ -36,37 +36,37 @@ class AccountController extends Controller
         }
 
         // Render-safe upload
-        if ($request->hasFile('image')) {
+        // if ($request->hasFile('image')) {
 
-            $file = $request->file('image');
+        //     $file = $request->file('image');
         
-            $filename = 'user_' . time() . '_' . uniqid() . '.jpg';
+        //     $filename = 'user_' . time() . '_' . uniqid() . '.jpg';
         
-            // ensure directory exists (Laravel way)
-            Storage::disk('public')->makeDirectory('profile_images');
+        //     // ensure directory exists (Laravel way)
+        //     Storage::disk('public')->makeDirectory('profile_images');
         
-            $tempPath = storage_path('app/public/profile_images/' . $filename);
+        //     $tempPath = storage_path('app/public/profile_images/' . $filename);
         
-            // Intervention v3
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read($file->getRealPath());
-            $image->scale(width: 300);
+        //     // Intervention v3
+        //     $manager = new ImageManager(new Driver());
+        //     $image = $manager->read($file->getRealPath());
+        //     $image->scale(width: 300);
         
-            // compress loop
-            $quality = 85;
-            do {
-                $image->toJpeg($quality)->save($tempPath);
-                $size = filesize($tempPath);
-                $quality -= 5;
-            } while ($size > 409600 && $quality > 20); // 400KB safer than 4KB
+        //     // compress loop
+        //     $quality = 85;
+        //     do {
+        //         $image->toJpeg($quality)->save($tempPath);
+        //         $size = filesize($tempPath);
+        //         $quality -= 5;
+        //     } while ($size > 409600 && $quality > 20); // 400KB safer than 4KB
         
-            // delete old image (Laravel way)
-            if ($user->image && Storage::disk('public')->exists('profile_images/' . $user->image)) {
-                Storage::disk('public')->delete('profile_images/' . $user->image);
-            }
+        //     // delete old image (Laravel way)
+        //     if ($user->image && Storage::disk('public')->exists('profile_images/' . $user->image)) {
+        //         Storage::disk('public')->delete('profile_images/' . $user->image);
+        //     }
         
-            $user->image = $filename;
-        }
+        //     $user->image = $filename;
+        // }
         
         $user->save();
 
