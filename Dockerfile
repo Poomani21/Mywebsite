@@ -33,6 +33,5 @@ EXPOSE 10000
  && chmod -R 775 public/storage \
  && php artisan migrate --force || true \
  && php artisan db:seed --force || true \
- && apache2-foreground \
  && php artisan serve --host=0.0.0.0 --port=10000
 
