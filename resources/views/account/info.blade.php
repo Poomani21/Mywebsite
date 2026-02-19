@@ -256,7 +256,7 @@ $.ajax({
     },
     success: function (res) {
 
-        toastr.success("Account deleted");
+      
 
         // close modal
         $('#deleteModal').modal('hide');
@@ -282,7 +282,7 @@ $.ajax({
                 _method: "DELETE"
             },
             success: function (res) {
-                toastr.success("Account deleted");
+                
                 window.location = res.redirect;
             }
         });
@@ -336,7 +336,7 @@ $('#saveAccount').click(function () {
                 if (errors.image) $('.error-image').text(errors.image[0]);
 
             } else {
-                toastr.error("Upload failed. Server error.");
+                
                 console.log(xhr.responseText);
             }
         }
