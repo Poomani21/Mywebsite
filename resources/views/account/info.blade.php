@@ -128,8 +128,22 @@
         <div class="card-body">
             <p><strong>Name:</strong> {{ $user->name }}</p>
             <p><strong>Email:</strong> {{ $user->email }}</p>
-            <img src="{{ $user->image ? asset('storage/profile_images/'.$user->image) : asset('images/default-user.png') }}"
-            style="width:100px;height:100px;border-radius:50%;object-fit:cover">
+            <p><strong>Address:</strong>
+                @if($user->address)
+                    {{ $user->address->address_line1 }}
+                    {{ $user->address->address_line2 ? ', '.$user->address->address_line2 : '' }},
+                    {{ $user->address->city }},
+                    {{ $user->address->state }},
+                    {{ $user->address->pincode }},
+                    {{ $user->address->country }}
+                @else
+                    Not provided
+                @endif
+            </p>
+            
+            
+            {{-- <img src="{{ $user->image ? asset('storage/profile_images/'.$user->image) : asset('images/default-user.png') }}"
+            style="width:100px;height:100px;border-radius:50%;object-fit:cover"> --}}
         </div>
     </div>
 

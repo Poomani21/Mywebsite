@@ -15,7 +15,7 @@ class AccountController extends Controller
     
     public function edit()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load('address');
         return view('account.info', compact('user'));
     }
 
