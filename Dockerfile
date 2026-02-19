@@ -23,9 +23,16 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platfo
 
 EXPOSE 10000
 
-CMD php artisan key:generate --force \
+ CMD php artisan key:generate --force \
  && php artisan config:clear \
  && php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache \
+ && php artisan storage:link || true \
+ && chmod -R 775 storage \
+ && chmod -R 775 public/storage \
  && php artisan migrate --force || true \
  && php artisan db:seed --force || true \
+ && apache2-foreground \
  && php artisan serve --host=0.0.0.0 --port=10000
+

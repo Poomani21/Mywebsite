@@ -24,17 +24,12 @@ class AccountController extends Controller
         $user = Auth::user();
         $request->validate([
             'name' => 'required|string|max:100',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($user->_id, '_id')
-            ],
             'password' => 'nullable|min:6|confirmed',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp'
         ]);
 
         $user->name = $request->name;
-        $user->email = $request->email;
+        // $user->email = $request->email;
 
         if ($request->password) {
             $user->password = Hash::make($request->password);
@@ -43,32 +38,38 @@ class AccountController extends Controller
         // Render-safe upload
         if ($request->hasFile('image')) {
 
-            Storage::disk('public')->makeDirectory('profile_images');
-        
-            // delete old
-            if ($user->image && Storage::disk('public')->exists('profile_images/'.$user->image)) {
-                Storage::disk('public')->delete('profile_images/'.$user->image);
-            }
-        
             $file = $request->file('image');
         
             $filename = 'user_'.time().'_'.uniqid().'.jpg';
-            $path = storage_path('app/public/profile_images/'.$filename);
+        
+            // ensure directory exists
+            $dir = storage_path('app/public/profile_images');
+            if (!file_exists($dir)) {
+                mkdir($dir, 0775, true);
+            }
+        
+            $path = $dir.'/'.$filename;
         
             // Intervention v3
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read($file->getRealPath());
+            $manager = new \Intervention\Image\ImageManager(
+                new \Intervention\Image\Drivers\Gd\Driver()
+            );
         
-            // resize avatar
+            $image = $manager->read($file->getRealPath());
             $image->scale(width: 300);
         
-            // compress loop ≤4KB
-            $quality = 90;
+            // compress loop
+            $quality = 85;
             do {
                 $image->toJpeg($quality)->save($path);
                 $size = filesize($path);
                 $quality -= 5;
-            } while ($size > 4096 && $quality > 10);
+            } while ($size > 4096 && $quality > 20);
+        
+            // delete old
+            if ($user->image && file_exists($dir.'/'.$user->image)) {
+                unlink($dir.'/'.$user->image);
+            }
         
             $user->image = $filename;
         }

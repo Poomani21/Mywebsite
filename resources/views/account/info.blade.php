@@ -195,13 +195,13 @@
 
                     <div class="mb-3">
                         <label>Name</label>
-                        <input type="text" name="name" class="form-control" value="{{ $user->name }}">
+                        <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
                         <small class="text-danger error-name"></small>
                     </div>
 
                     <div class="mb-3">
                         <label>Email</label>
-                        <input type="email" name="email" class="form-control" value="{{ $user->email }}">
+                        <input type="email" name="email" class="form-control" value="{{ $user->email }}" disabled>
                         <small class="text-danger error-email"></small>
                     </div>
 
@@ -327,13 +327,20 @@ $('#saveAccount').click(function () {
 
         error: function (xhr) {
 
-            let errors = xhr.responseJSON.errors;
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
 
-            if (errors.name) $('.error-name').text(errors.name[0]);
-            if (errors.email) $('.error-email').text(errors.email[0]);
-            if (errors.password) $('.error-password').text(errors.password[0]);
-            if (errors.image) $('.error-image').text(errors.image[0]);  // ADD THIS
+                let errors = xhr.responseJSON.errors;
+
+                if (errors.name) $('.error-name').text(errors.name[0]);
+                if (errors.password) $('.error-password').text(errors.password[0]);
+                if (errors.image) $('.error-image').text(errors.image[0]);
+
+            } else {
+                toastr.error("Upload failed. Server error.");
+                console.log(xhr.responseText);
+            }
         }
+
     });
 
 });
