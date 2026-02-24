@@ -154,7 +154,8 @@
             {{ $order->shipping_address['address_line1'] }}<br>
             {{ $order->shipping_address['city'] }},
             {{ $order->shipping_address['state'] }} -
-            {{ $order->shipping_address['pincode'] }}
+            {{ $order->shipping_address['pincode'] }},
+            {{ $order->shipping_address['phone'] }}
         @else
             No shipping address
         @endif

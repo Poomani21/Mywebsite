@@ -36,5 +36,16 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+   'fast2sms' => [
+        'key' => env('FAST2SMS_KEY'),
+        'sender' => env('FAST2SMS_SENDER'),
+        'template' => env('FAST2SMS_TEMPLATE'),
+    ],
+
+    'whatsapp' => [
+        'token' => env('WHATSAPP_TOKEN'),
+        'phone_id' => env('WHATSAPP_PHONE_ID'),
+    ],
+
 
 ];

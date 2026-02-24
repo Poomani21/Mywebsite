@@ -100,6 +100,8 @@
             <div class="meta"><strong>Name:</strong> {{ $order->user->name ?? '' }}</div>
             <div class="meta"><strong>Email:</strong> {{ $order->user->email ?? '' }}</div>
             <div class="meta"><strong>User ID:</strong> {{ $order->userID }}</div>
+            <div class="meta"><strong>Phone:</strong> {{ $order->user->phone ?? '' }}</div>
+
         </div>
 
         <div class="right">
@@ -121,7 +123,8 @@
         {{ $order->shipping_address['address_line1'] ?? '' }}<br>
         {{ $order->shipping_address['city'] ?? '' }},
         {{ $order->shipping_address['state'] ?? '' }} -
-        {{ $order->shipping_address['pincode'] ?? '' }}
+        {{ $order->shipping_address['pincode'] ?? '' }},
+        {{ $order->shipping_address['phone'] ?? '' }}
     </div>
 
     {{-- ITEMS --}}

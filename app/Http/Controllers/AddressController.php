@@ -35,6 +35,7 @@ class AddressController extends Controller
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'pincode' => 'required|string|max:20',
+             'phone'=>'required|numeric'
         ]);
         
  
@@ -45,6 +46,7 @@ class AddressController extends Controller
          $address->userID = Auth::id();
          $address->address_line1 = $request->address_line1;
          $address->address_line2 = $request->address_line2;
+         $address->phone = $request->phone;
          $address->city = $request->city;
          $address->state = $request->state;
          $address->pincode = $request->pincode;
@@ -153,9 +155,9 @@ class AddressController extends Controller
          return response()->json([
              'success' => true,
              'estimate' => $start . ' - ' . $end,
-             'address' => $address->address_line1 . ', ' . $address->city . ' - ' . $address->pincode,
+             'address' => $address->address_line1 . ', ' . $address->city . ' - ' . $address->pincode .', '.$address->phone,
              'delivery_state' => $deliveryState,
-             'warehouse_state' => $warehouseState
+             'warehouse_state' => $warehouseState,
          ]);
      }
      

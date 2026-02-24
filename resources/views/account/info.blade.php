@@ -128,6 +128,7 @@
         <div class="card-body">
             <p><strong>Name:</strong> {{ $user->name }}</p>
             <p><strong>Email:</strong> {{ $user->email }}</p>
+            <p><strong>Phone:</strong> {{ $user->phone }}</p>
             <p><strong>Address:</strong>
                 @if($user->address)
                     {{ $user->address->address_line1 }}
@@ -194,59 +195,82 @@
 </div>
 
 
-<div class="modal fade" id="editModal">
-    <div class="modal-dialog">
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
+            <!-- Header -->
             <div class="modal-header">
                 <h5 class="modal-title">Edit Account</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
+            <!-- Body -->
             <div class="modal-body">
-                <form id="accountForm">
+                <form id="accountForm" enctype="multipart/form-data">
                     @csrf
 
+                    <!-- Name -->
                     <div class="mb-3">
-                        <label>Name</label>
+                        <label class="form-label">Name</label>
                         <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
                         <small class="text-danger error-name"></small>
                     </div>
 
+                    <!-- Email -->
                     <div class="mb-3">
-                        <label>Email</label>
+                        <label class="form-label">Email</label>
                         <input type="email" name="email" class="form-control" value="{{ $user->email }}" disabled>
                         <small class="text-danger error-email"></small>
                     </div>
 
+                    <!-- Phone -->
                     <div class="mb-3">
-                        <label>New Password</label>
+                        <label class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text">+91</span>
+                            <input 
+                                type="number"
+                                name="phone"
+                                value="{{ $user->phone }}"
+                                class="form-control"
+                                required>
+                        </div>
+                        <small class="text-danger error-phone"></small>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
                         <input type="password" name="password" class="form-control">
                         <small class="text-danger error-password"></small>
                     </div>
 
+                    <!-- Confirm Password -->
                     <div class="mb-3">
-                        <label>Confirm Password</label>
+                        <label class="form-label">Confirm Password</label>
                         <input type="password" name="password_confirmation" class="form-control">
                     </div>
 
+                    <!-- Profile Image -->
                     <div class="mb-3 text-center">
                         <img id="profilePreview"
                              src="{{ $user->image ? asset('images/'.$user->image) : asset('images/default-user.png') }}"
-                             style="width:100px;height:100px;border-radius:50%;object-fit:cover">
-                    
-                        <div class="mt-2">
-                            <input type="file" name="image" id="imageInput" class="form-control">
-                            <small class="text-danger error-image"></small>
-                        </div>
+                             class="rounded-circle mb-2"
+                             style="width:100px;height:100px;object-fit:cover;">
+
+                        <input type="file" name="image" id="imageInput" class="form-control">
+                        <small class="text-danger error-image"></small>
                     </div>
-                    
 
                 </form>
             </div>
 
+            <!-- Footer -->
             <div class="modal-footer">
-                <button class="btn btn-success" id="saveAccount">Save</button>
+                <button type="button" class="btn btn-success" id="saveAccount">
+                    Save
+                </button>
             </div>
 
         </div>
@@ -348,7 +372,7 @@ $('#saveAccount').click(function () {
                 if (errors.name) $('.error-name').text(errors.name[0]);
                 if (errors.password) $('.error-password').text(errors.password[0]);
                 if (errors.image) $('.error-image').text(errors.image[0]);
-
+                if (errors.phone) $('.error-phone').text(errors.phone[0]);
             } else {
                 
                 console.log(xhr.responseText);

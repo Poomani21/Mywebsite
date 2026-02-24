@@ -27,7 +27,8 @@ class User extends Authenticatable
         'register_device',
         'login_device',
         'last_login_at',
-        'image'
+        'image',
+        'phone'
     ];
 
     /**

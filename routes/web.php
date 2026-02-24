@@ -135,4 +135,11 @@ Route::post('accountInfo/update', [AccountController::class, 'update'])->name('a
 Route::delete('accountInfo/delete', [AccountController::class, 'destroy'])->name('account.delete');
 
 
+Route::get('/testsms', function () {
+    \App\Services\OrderNotificationService::sendSMS(
+        '9578777149',
+        'Test SMS from Laravel'
+    );
+});
+
 });

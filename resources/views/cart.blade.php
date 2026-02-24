@@ -191,6 +191,18 @@ a.disabled {
   const stripe = Stripe("{{ config('services.stripe.key') }}");
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    @if ($errors->any())
+        const modalEl = document.getElementById('addressModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+    @endif
+});
+  </script>
+
+
+
 <section class="gradient-custom">
   <div class="container">
     <div class="row justify-content-center">
@@ -429,24 +441,55 @@ a.disabled {
         <form action="{{ route('address.store') }}" method="POST">
           @csrf
           <div class="modal-body">
+
+            <div class="mb-3">
+              <label class="form-label">Phone Number</label>
+              <div class="input-group">
+              <span class="input-group-text">+91</span>
+              <input 
+                  type="number"
+                  name="phone"
+                  value="{{ old('phone') }}"
+                  class="form-control @error('phone') is-invalid @enderror"
+                  required
+              >
+
+              @error('phone')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                          </div>
+            </div>
+
             <div class="mb-3">
               <label class="form-label">Address Line</label>
-              <input type="text" name="address_line1" class="form-control" required>
+              <input type="text" name="address_line1" value="{{ old('address_line1') }}" class="form-control @error('address_line1') is-invalid @enderror" required>
+              @error('address_line1')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
             </div>
   
             <div class="mb-3">
               <label class="form-label">City</label>
-              <input type="text" name="city" class="form-control" required>
+              <input type="text" name="city" value="{{ old('city') }}" class="form-control @error('city') is-invalid @enderror" required>
+              @error('city')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
             </div>
   
             <div class="mb-3">
               <label class="form-label">State</label>
-              <input type="text" name="state" class="form-control" required>
+              <input type="text" name="state" value="{{ old('state') }}" class="form-control @error('state') is-invalid @enderror" required>
+              @error('state')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
             </div>
   
             <div class="mb-3">
               <label class="form-label">Pincode</label>
-              <input type="text" name="pincode" class="form-control" required>
+              <input type="text" name="pincode" value="{{ old('pincode') }}" class="form-control @error('pincode') is-invalid @enderror" required>
+              @error('pincode')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
             </div>
           </div>
   
@@ -570,7 +613,7 @@ $(document).ready(function () {
 
                 // Optional: clear address text
                 addressEl.innerText = '';
-                estimateEl.innerText = 'Delivery is not available for the selected address';
+                estimateEl.innerText = 'Delivery is not available for the selected address. It is available only within India.';
                 $('#checkoutBtn')
                 .addClass('disabled')
                 .attr('aria-disabled', 'true');
@@ -833,9 +876,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
   </script>
     
-    
-  
+   
 
+    <script>
+      const modalEl = document.getElementById('addressModal');
+      
+      modalEl.addEventListener('hidden.bs.modal', function () {
+      
+          const form = modalEl.querySelector("form");
+      
+          // reset form values
+          form.reset();
+      
+          // remove invalid classes
+          form.querySelectorAll('.is-invalid').forEach(el => {
+              el.classList.remove('is-invalid');
+          });
+      
+          // remove validation messages
+          form.querySelectorAll('.invalid-feedback').forEach(el => {
+              el.remove();
+          });
+      
+      });
+      </script>
+  
+  <script>
+    document.getElementById('addressModal')
+    .addEventListener('hidden.bs.modal', function () {
+        const form = this.querySelector("form");
+        form.reset();
+
+        form.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+    });
+    </script>
 
 @endsection
 

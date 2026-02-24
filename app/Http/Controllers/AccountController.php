@@ -25,35 +25,36 @@ class AccountController extends Controller
         $request->validate([
             'name' => 'required|string|max:100',
             'password' => 'nullable|min:6|confirmed',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'phone'=>'required|numeric'
         ]);
 
         $user->name = $request->name;
-        // $user->email = $request->email;
+        $user->phone = $request->phone;
 
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
 
-        // Render-safe upload
+        // Ensure directory exists
         $path = public_path('images');
 
         if (!File::exists($path)) {
-            File::makeDirectory($path, 0777, true, true);
+            File::makeDirectory($path, 0755, true);
         }
 
-        // If new image uploaded, replace old one
+        // Upload new image
         if ($request->hasFile('image')) {
 
-            // Delete old image if exists
-            if ($user->image && File::exists($path . '/' . $user->image)) {
-                File::delete($path . '/' . $user->image);
+            // Delete old image
+            if (!empty($user->image) && File::exists($path.'/'.$user->image)) {
+                File::delete($path.'/'.$user->image);
             }
 
-            $fileExtension = $request->file('image')->getClientOriginalExtension();
-            $fileName = 'user_image_' . time() . '_' . uniqid() . '.' . $fileExtension;
+            $file = $request->file('image');
+            $fileName = 'user_image_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
 
-            $request->file('image')->move($path, $fileName);
+            $file->move($path, $fileName);
 
             $user->image = $fileName;
         }

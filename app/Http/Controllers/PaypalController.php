@@ -12,6 +12,7 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Illuminate\Support\Facades\Redirect;
 use MongoDB\BSON\ObjectId;
 use App\Models\Address as ModelsAddress;
+use App\Services\OrderNotificationService;
 use Stripe\Stripe;
 use Stripe\Charge;
 use Stripe\PaymentIntent;
@@ -193,12 +194,33 @@ class PaypalController extends Controller
                 'city' => $address->city,
                 'state' => $address->state,
                 'pincode' => $address->pincode,
+                'phone' => $address->phone,
             ],
         ]);
 
         $registerData = DeviceLocationHelper::getDeviceLocationData($request);
         Order::where('_id', $order->_id)
             ->update(['ordered_device' => $registerData]);
+
+
+        /* ==============================
+        SEND SMS + WHATSAPP
+        ==============================*/
+        $mobile = Auth::user()->phone ?? $address->phone; // ensure stored
+        $amount = number_format($order->total_amount, 2);
+
+        $smsMessage = "Hi ".Auth::user()->name.
+            ", Payment of Rs $amount received. Order #$order->_id confirmed.";
+
+        $waMessage = "🛒 Order Confirmed\n".
+            "Order ID: $order->_id\n".
+            "Amount: Rs $amount\n".
+            "Delivery to: {$address->address_line1}, {$address->city}\n".
+            "Thank you for shopping with us!";
+
+        OrderNotificationService::sendSMS($mobile, $smsMessage);
+        OrderNotificationService::sendWhatsApp($mobile, $waMessage);
+
     
         \Cart::clear(); // empty cart after order
     
@@ -387,11 +409,30 @@ class PaypalController extends Controller
                 'city' => $address->city,
                 'state' => $address->state,
                 'pincode' => $address->pincode,
+                'phone' => $address->phone,
             ],
         ]);
         $registerData = DeviceLocationHelper::getDeviceLocationData($request);
         Order::where('_id', $order->_id)
             ->update(['ordered_device' => $registerData]);
+
+        /* ==============================
+        SEND SMS + WHATSAPP
+        ==============================*/
+        $mobile = Auth::user()->phone ?? $address->phone;
+        $amount = number_format($order->total_amount, 2);
+
+        $smsMessage = "Hi ".Auth::user()->name.
+            ", Payment of Rs $amount received. Order #$order->_id confirmed.";
+
+        $waMessage = "🛒 Order Confirmed\n".
+            "Order ID: $order->_id\n".
+            "Amount: Rs $amount\n".
+            "Delivery to: {$address->address_line1}, {$address->city}\n".
+            "Thank you for shopping with us!";
+
+        OrderNotificationService::sendSMS($mobile, $smsMessage);
+        OrderNotificationService::sendWhatsApp($mobile, $waMessage);
 
         \Cart::clear(); // empty cart after order
 

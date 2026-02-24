@@ -31,6 +31,7 @@ EXPOSE 10000
  && php artisan storage:link || true \
  && chmod -R 775 storage \
  && chmod -R 775 public/storage \
+ && chmod -R 775 public/images \
  && php artisan migrate --force || true \
  && php artisan db:seed --force || true \
  && php artisan serve --host=0.0.0.0 --port=10000
