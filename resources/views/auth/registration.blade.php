@@ -368,7 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
                             </div>
                             <input type="number" id="phone" class="form-control" name="phone"
                                 placeholder="phone number" oninput="this.value=this.value.slice(0,10)" required>
