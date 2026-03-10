@@ -15,6 +15,7 @@ use App\Mail\PasswordResetMail;
 use App\Mail\WelcomeMail;
 use MongoDB\BSON\UTCDateTime;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
@@ -96,7 +97,11 @@ class AuthController extends Controller
         $user = $this->create($request->all());
 
         // call mail controller function
-        Mail::to($user->email)->send(new WelcomeMail($user));
+        try {
+            Mail::to($user->email)->send(new WelcomeMail($user));
+        } catch (\Exception $e) {
+            Log::error('Register Mail sending failed: '.$e->getMessage());
+        }
 
         $registerData = DeviceLocationHelper::getDeviceLocationData($request);
 
@@ -174,7 +179,13 @@ class AuthController extends Controller
         ]);
         
         // send reset confirmation email
-        Mail::to($user->email)->send(new PasswordResetMail($user));
+        try {
+            Mail::to($user->email)->send(new PasswordResetMail($user));
+        } catch (\Exception $e) {
+            Log::error('Forgot Password Mail sending failed: '.$e->getMessage());
+        }
+
+        
         return redirect()->route('login')
             ->with('success', 'Password reset successful. Please login.');
     }

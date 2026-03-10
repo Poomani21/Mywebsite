@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use MongoDB\BSON\ObjectId;
 use App\Models\Address as ModelsAddress;
 use App\Services\OrderNotificationService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Stripe\Charge;
@@ -233,8 +234,15 @@ class PaypalController extends Controller
         OrderNotificationService::sendSMS($mobile, $smsMessage);
         OrderNotificationService::sendWhatsApp($mobile, $waMessage);
 
-        Mail::to(Auth::user()->email)
-        ->send(new OrderConfirmationMail($order, $items));
+
+        try {
+            Mail::to(Auth::user()->email)
+            ->send(new OrderConfirmationMail($order, $items));
+        } catch (\Exception $e) {
+            Log::error('PayPal Mail sending failed: '.$e->getMessage());
+        }
+
+        
     
         \Cart::clear(); // empty cart after order
     
@@ -457,8 +465,13 @@ class PaypalController extends Controller
         OrderNotificationService::sendSMS($mobile, $smsMessage);
         OrderNotificationService::sendWhatsApp($mobile, $waMessage);
 
-        Mail::to(Auth::user()->email)
-        ->send(new OrderConfirmationMail($order, $items));
+
+        try {
+            Mail::to(Auth::user()->email)
+            ->send(new OrderConfirmationMail($order, $items));
+        } catch (\Exception $e) {
+            Log::error('Stripe Payment Mail sending failed: '.$e->getMessage());
+        }
 
         \Cart::clear(); // empty cart after order
 

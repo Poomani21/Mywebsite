@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\OrderNotificationService;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use MongoDB\BSON\Regex;
 
@@ -123,8 +124,12 @@ class OrderController extends Controller
             OrderNotificationService::sendSMS($mobile, $smsMessage);
 
             // Send Email
-            Mail::to(Auth::user()->email)
+            try {
+                Mail::to(Auth::user()->email)
                 ->send(new OrderCancelledMail($order));
+            } catch (\Exception $e) {
+                Log::error('Order Cancel Mail sending failed: '.$e->getMessage());
+            }
 
         }
 
