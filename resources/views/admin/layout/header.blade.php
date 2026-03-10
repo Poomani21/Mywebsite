@@ -181,11 +181,45 @@
 }
 
 
+/* Navbar logo */
+.navbar-brand{
+    display:flex;
+    align-items:center;
+    padding:0;
+    margin-right:20px;
+}
+
+.site-logo{
+    height:48px;   /* bigger */
+    width:auto;
+    object-fit:contain;
+}
+
+/* Mobile view */
+@media (max-width:576px){
+
+.site-logo{
+    height:36px;
+}
+
+.navbar-brand{
+    margin-right:10px;
+}
+
+}
+
 </style>
 
 
 <nav class="navbar navbar-expand-lg main-nav">
   <div class="container">
+
+    <a class="navbar-brand custom-logo" href="{{ route('products.list') }}">
+        <img src="{{ asset('images/Copilot_20260309_145910.png') }}" 
+             alt="Logo"
+             class="site-logo">
+    </a>
+
     <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
       <i class="fas fa-bars"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">

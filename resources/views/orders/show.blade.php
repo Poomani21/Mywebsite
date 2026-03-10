@@ -131,7 +131,7 @@
 
     <div class="info-card">
         <strong>Order ID</strong>
-        {{ $order->_id }}
+        {{ $order->order_number ?? $order->_id }}
 
         <strong class="mt-2">Payment ID</strong>
         {{ $order->paypal_order_id ?? ($order->stripe_payment_id ?? $order->stripe_payment_intent_id) }}

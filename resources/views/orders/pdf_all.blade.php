@@ -93,9 +93,13 @@
 
     {{-- HEADER --}}
     <div class="header">
-        <div class="company">My Shop Pvt Ltd</div>
-        <div>123, My Street, Chennai, Tamil Nadu - 600001</div>
-        <div>Phone: +91 90000 00000 | Email: support@myshop.com</div>
+
+        <img src="{{ public_path('images/Copilot_20260309_145910.png') }}" 
+        style="height:60px; margin-bottom:10px;">
+        
+        <div class="company">{{ env('APP_NAME') }} Pvt Ltd</div>
+        <div>104, Guindy, Chennai, Tamil Nadu - 600032</div>
+        <div>Phone: +91 9578777149 | Email: spoomani21@gmail.com</div>
     </div>
 
     <hr>
@@ -111,9 +115,9 @@
 
         <div class="right">
             <div class="section-title">Order Details</div>
-            <div class="meta"><strong>Invoice #:</strong> INV-{{ $order->_id }}</div>
-            <div class="meta"><strong>Order ID:</strong> {{ $order->_id }}</div>
-            <div class="meta"><strong>PayPal ID:</strong> {{ $order->paypal_order_id }}</div>
+            <div class="meta"><strong>Invoice #:</strong> INV-{{ $order->order_number ??  $order->_id }}</div>
+            <div class="meta"><strong>Order ID:</strong> {{ $order->order_number ?? $order->_id }}</div>
+            <div class="meta"><strong>Payment ID:</strong> {{ $order->stripe_payment_id ?? $order->paypal_order_id }}</div>
             <div class="meta"><strong>Status:</strong> {{ ucfirst($order->status) }}</div>
             <div class="meta">
                 <strong>Date:</strong>
@@ -212,6 +216,9 @@
     <p style="margin-top:20px;">
         Thank you for shopping with us !
     </p>
+    <a href="{{ route('orders.index') }}">
+        View All Order Details
+    </a>
 
     {{-- PAGE BREAK --}}
     <div class="page-break"></div>

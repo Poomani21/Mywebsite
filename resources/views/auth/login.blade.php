@@ -175,6 +175,63 @@ body, html {
 }
 }
 
+/* Logo alignment */
+.logo-container{
+    text-align:center;
+    margin-bottom:-65px; /* desktop gap reduce */
+}
+
+.login-logo{
+    width:200px;
+    height:auto;
+}
+
+/* spacing for header */
+.card-header{
+    text-align:center;
+    border-bottom:none;
+    padding-top:0px;
+    padding-bottom:5px;
+}
+
+.card-header h3{
+    margin:0;
+}
+
+/* Card styling */
+.card{
+    min-height:420px;
+    margin-top:auto;
+    margin-bottom:auto;
+    width:400px;
+    background-color: rgba(0,0,0,0.55) !important;
+    border-radius:10px;
+    padding-bottom:15px;
+}
+
+
+/* 📱 Mobile view */
+@media (max-width:576px){
+
+.logo-container{
+    margin-bottom:-25px; /* reduce negative margin for mobile */
+}
+
+.login-logo{
+    width:150px;
+}
+
+.card{
+    width:92%;
+    margin:40px auto;
+    padding:15px;
+}
+
+.card-header h3{
+    font-size:20px;
+}
+
+}
 
 </style>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -201,6 +258,26 @@ body, html {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Site Title -->
+    <title>{{ config('app.name') }}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/Copilot_20260309_145910.png') }}">
+
+    <!-- Open Graph (Facebook / WhatsApp) -->
+    <meta property="og:title" content="{{ config('app.name') }}">
+    <meta property="og:description" content="Shop the best products online. Fast delivery and secure payment.">
+    <meta property="og:image" content="{{ asset('images/Copilot_20260309_145910.png') }}">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ config('app.name') }}">
+    <meta name="twitter:description" content="Shop the best products online.">
+    <meta name="twitter:image" content="{{ asset('images/Copilot_20260309_145910.png') }}">
+    
+    
 </head>
 
 <body>
@@ -222,13 +299,16 @@ body, html {
     <div class="container">
         <div class="d-flex justify-content-center h-60">
             <div class="card">
+
+                <div class="logo-container">
+                    <img src="{{ asset('images/Copilot_20260309_145910.png') }}" 
+                         alt="Logo" 
+                         class="login-logo">
+                </div>
+                
                 <div class="card-header">
                     <h3>Sign In</h3>
-                    <div class="d-flex justify-content-end social_icon">
-                        <span><i class="fab fa-facebook-square"></i></span>
-                        <span><i class="fab fa-google-plus-square"></i></span>
-                        <span><i class="fab fa-twitter-square"></i></span>
-                    </div>
+                    
                 </div>
 
                 <div class="card-body">

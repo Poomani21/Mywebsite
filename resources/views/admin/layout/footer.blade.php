@@ -1,3 +1,50 @@
+<style>
+
+/* Footer bottom */
+.footer-bottom{
+    background:#f8f9fa;
+    padding:20px 0;
+}
+
+/* Footer text */
+.footer-text{
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+/* Logo wrapper */
+.footer-logo-wrapper{
+    margin-bottom:10px;
+}
+
+/* Footer logo */
+.footer-logo{
+    height:70px;   /* bigger logo */
+    width:auto;
+    max-width:100%;
+}
+
+/* Payment icons */
+.footer-payments i{
+    font-size:24px;
+    margin:0 8px;
+    color:#555;
+}
+
+/* Mobile */
+@media (max-width:576px){
+
+.footer-logo{
+    height:50px;
+}
+
+.footer-payments i{
+    font-size:20px;
+}
+
+}
+</style>
+
 <footer class="shop-footer">
   <div class="container py-5">
     <div class="row">
@@ -59,22 +106,21 @@
   </div>
 
   <!-- Bottom Bar -->
-  <div class="footer-bottom">
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+<div class="footer-bottom">
+  <div class="container text-center">
 
-      <div class="mb-2 mb-md-0 text-center text-md-start">
-        © {{ date('Y') }} mywebsite.com. All rights reserved.
-      </div>
-
-      <div class="footer-payments">
-        <i class="fab fa-cc-visa"></i>
-        <i class="fab fa-cc-mastercard"></i>
-        <i class="fab fa-cc-amex"></i>
-        <i class="fab fa-cc-paypal"></i>
-      </div>
-
+    <div class="footer-text">
+      © {{ date('Y') }} mywebsite.com. All rights reserved.
     </div>
+
+    <div class="footer-logo-wrapper">
+      <img src="{{ asset('images/Copilot_20260309_145910.png') }}" 
+           alt="Logo"
+           class="footer-logo">
+    </div>
+
   </div>
+</div>
 </footer>
 
 <style>

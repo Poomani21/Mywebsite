@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\DeviceLocationHelper;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\Session\Session;
@@ -13,9 +14,11 @@ use Illuminate\Support\Facades\Redirect;
 use MongoDB\BSON\ObjectId;
 use App\Models\Address as ModelsAddress;
 use App\Services\OrderNotificationService;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Stripe\Charge;
 use Stripe\PaymentIntent;
+use Illuminate\Support\Str;
 class PaypalController extends Controller
 {
     
@@ -182,7 +185,11 @@ class PaypalController extends Controller
         if (!$userID) {
             return redirect()->route('products.list')->with('error', 'Please login to complete your order.');
         }
+
+        $orderNumber = Order::generateOrderNumber();
+
         $order = Order::create([
+            'order_number' => $orderNumber,
             'userID' => $userID,
             'paypal_order_id' => $response['id'] ?? null,
             'items' => $items,
@@ -209,11 +216,16 @@ class PaypalController extends Controller
         $mobile = Auth::user()->phone ?? $address->phone; // ensure stored
         $amount = number_format($order->total_amount, 2);
 
-        $smsMessage = "Hi ".Auth::user()->name.
-            ", Payment of Rs $amount received. Order #$order->_id confirmed.";
+        // $smsMessage = "Hi ".Auth::user()->name.
+        //     ", Payment of Rs $amount received. Order #$order->_id confirmed.";
+
+        $smsMessage = "Hi ".Auth::user()->name.", your order ".$order->order_number.
+            " has been confirmed. Payment of Rs $amount received. ".
+            "Thank you for shopping with ".env('APP_NAME').".";
+    
 
         $waMessage = "🛒 Order Confirmed\n".
-            "Order ID: $order->_id\n".
+            "Order ID: $order->order_number\n".
             "Amount: Rs $amount\n".
             "Delivery to: {$address->address_line1}, {$address->city}\n".
             "Thank you for shopping with us!";
@@ -221,6 +233,8 @@ class PaypalController extends Controller
         OrderNotificationService::sendSMS($mobile, $smsMessage);
         OrderNotificationService::sendWhatsApp($mobile, $waMessage);
 
+        Mail::to(Auth::user()->email)
+        ->send(new OrderConfirmationMail($order, $items));
     
         \Cart::clear(); // empty cart after order
     
@@ -396,8 +410,10 @@ class PaypalController extends Controller
             ];
         }
 
+        $orderNumber = Order::generateOrderNumber();
         // Create order
         $order = Order::create([
+            'order_number' => $orderNumber,
             'userID' => $userID,
             'stripe_payment_id' => $request->get('payment_intent_id'),
             'items' => $items,
@@ -422,17 +438,27 @@ class PaypalController extends Controller
         $mobile = Auth::user()->phone ?? $address->phone;
         $amount = number_format($order->total_amount, 2);
 
-        $smsMessage = "Hi ".Auth::user()->name.
-            ", Payment of Rs $amount received. Order #$order->_id confirmed.";
+        // $smsMessage = "Hi ".Auth::user()->name.
+        //     ", Payment of Rs $amount received. Order #$order->_id confirmed.";
+
+       
+
+        $smsMessage = "Hi ".Auth::user()->name.", your order ".$order->order_number.
+            " has been confirmed. Payment of Rs $amount received. ".
+            "Thank you for shopping with ".env('APP_NAME').".";
+
 
         $waMessage = "🛒 Order Confirmed\n".
-            "Order ID: $order->_id\n".
+            "Order ID: $order->order_number\n".
             "Amount: Rs $amount\n".
             "Delivery to: {$address->address_line1}, {$address->city}\n".
             "Thank you for shopping with us!";
 
         OrderNotificationService::sendSMS($mobile, $smsMessage);
         OrderNotificationService::sendWhatsApp($mobile, $waMessage);
+
+        Mail::to(Auth::user()->email)
+        ->send(new OrderConfirmationMail($order, $items));
 
         \Cart::clear(); // empty cart after order
 

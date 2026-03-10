@@ -22,6 +22,7 @@ class OrderNotificationService
             'accept' => 'application/json'
         ])->post('https://www.fast2sms.com/dev/bulkV2', [
             'route' => 'q',
+            // 'route' => 't',
             'message' => $message,
             'language' => 'english',
             'flash' => 0,

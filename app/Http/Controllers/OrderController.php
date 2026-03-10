@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\DeviceLocationHelper;
+use App\Mail\OrderCancelledMail;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\OrderNotificationService;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 use MongoDB\BSON\Regex;
 
 class OrderController extends Controller
@@ -99,6 +102,30 @@ class OrderController extends Controller
         if ($order->status === 'paid') {
             $order->status = 'cancelled';
             $order->save();
+
+            // Customer mobile
+            $mobile = Auth::user()->phone ?? $order->shipping_address['phone'];
+
+            // Amount
+            $amount = number_format($order->total_amount, 2);
+
+            // Track URL
+            $trackUrl = route('orders.show', $order->_id);
+
+            // SMS message (Amazon/Flipkart style)
+            $smsMessage = "Hi ".Auth::user()->name.
+            ", your order ".$order->order_number." has been cancelled. ".
+            "Refund of Rs $amount will be processed shortly. ".
+            "Order details: ".$trackUrl." ".
+            "- ".env('APP_NAME');
+
+            // Send SMS
+            OrderNotificationService::sendSMS($mobile, $smsMessage);
+
+            // Send Email
+            Mail::to(Auth::user()->email)
+                ->send(new OrderCancelledMail($order));
+
         }
 
         return back()->with('success', 'Order cancelled successfully');

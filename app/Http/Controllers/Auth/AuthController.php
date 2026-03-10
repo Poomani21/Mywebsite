@@ -11,8 +11,12 @@ use App\Models\User;
 use Hash;
 use Jenssegers\Agent\Agent;
 use App\Helpers\DeviceLocationHelper;
+use App\Mail\PasswordResetMail;
+use App\Mail\WelcomeMail;
 use MongoDB\BSON\UTCDateTime;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
+
 class AuthController extends Controller
 {
     /**
@@ -85,10 +89,15 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'phone'=>'required|numeric',
         ]);
            
 
         $user = $this->create($request->all());
+
+        // call mail controller function
+        Mail::to($user->email)->send(new WelcomeMail($user));
+
         $registerData = DeviceLocationHelper::getDeviceLocationData($request);
 
         User::where('_id', $user->_id)
@@ -128,7 +137,8 @@ class AuthController extends Controller
         'name' => $data['name'],
         'email' => $data['email'],
         'password' => Hash::make($data['password']),
-        'role'=>'User'
+        'role'=>'User',
+        'phone'=>$data['phone'],
       ]);
     }
     
@@ -157,10 +167,14 @@ class AuthController extends Controller
             'confirm-password' => 'required'
         ]);
 
-        User::where('email', $request->email)->update([
+        $user = User::where('email', $request->email)->first();
+        // update password
+        $user->update([
             'password' => Hash::make($request->password)
         ]);
-
+        
+        // send reset confirmation email
+        Mail::to($user->email)->send(new PasswordResetMail($user));
         return redirect()->route('login')
             ->with('success', 'Password reset successful. Please login.');
     }

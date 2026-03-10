@@ -476,7 +476,7 @@
                                 </div>
 
                                 <div class="order-meta mt-1">
-                                    Order #{{ $order->_id }}
+                                    Order #{{ $order->order_number ?? $order->_id }}
                                 </div>
 
                                 <div class="order-meta">
