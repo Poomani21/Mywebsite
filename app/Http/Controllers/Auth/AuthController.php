@@ -108,7 +108,8 @@ class AuthController extends Controller
         try {
             // Mail::to($user->email)->queue(new WelcomeMail($user));
             // Dispatch job instead of sending mail directly
-            SendWelcomeEmail::dispatch($user);
+            // SendWelcomeEmail::dispatch($user);
+            Mail::to($user->email)->send(new WelcomeMail($user));
         } catch (\Exception $e) {
             Log::error('Register Mail sending failed: '.$e->getMessage());
         }

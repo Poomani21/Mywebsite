@@ -12,7 +12,7 @@
                     <tr>
                         <td style="background:#f7f7f7;padding:25px;text-align:center">
 
-                            <img src="{{ asset('images/Copilot_20260309_145910.png') }}"
+                            <img src="{{ url('images/Copilot_20260309_145910.png') }}"
                                  alt="Logo"
                                  style="width:120px;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;">
                         

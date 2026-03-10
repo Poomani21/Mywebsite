@@ -8,6 +8,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\OrderController;
+use Illuminate\Support\Facades\Mail;
+
 //Auth routes
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
@@ -140,6 +142,16 @@ Route::get('/testsms', function () {
         '9578777149',
         'Test SMS from Laravel'
     );
+});
+
+Route::get('/test-mail', function () {
+
+    Mail::raw('Test Mail from Render', function ($message) {
+        $message->to('spoomani21@gmail.com')
+                ->subject('Render Mail Test');
+    });
+
+    return "Mail Sent";
 });
 
 });
