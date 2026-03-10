@@ -11,6 +11,7 @@ use App\Models\User;
 use Hash;
 use Jenssegers\Agent\Agent;
 use App\Helpers\DeviceLocationHelper;
+use App\Jobs\SendWelcomeEmail;
 use App\Mail\PasswordResetMail;
 use App\Mail\WelcomeMail;
 use MongoDB\BSON\UTCDateTime;
@@ -105,7 +106,9 @@ class AuthController extends Controller
 
         // call mail controller function using queue
         try {
-            Mail::to($user->email)->queue(new WelcomeMail($user));
+            // Mail::to($user->email)->queue(new WelcomeMail($user));
+            // Dispatch job instead of sending mail directly
+            SendWelcomeEmail::dispatch($user);
         } catch (\Exception $e) {
             Log::error('Register Mail sending failed: '.$e->getMessage());
         }
