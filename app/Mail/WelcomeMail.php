@@ -21,6 +21,7 @@ class WelcomeMail extends Mailable
     public function __construct($user)
     {
         $this->user = $user;
+        $this->delay(now()->addSeconds(5)); // optional delay
     }
 
     

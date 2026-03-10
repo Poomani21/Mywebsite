@@ -97,8 +97,15 @@ class AuthController extends Controller
         $user = $this->create($request->all());
 
         // call mail controller function
+        // try {
+        //     Mail::to($user->email)->send(new WelcomeMail($user));
+        // } catch (\Exception $e) {
+        //     Log::error('Register Mail sending failed: '.$e->getMessage());
+        // }
+
+        // call mail controller function using queue
         try {
-            Mail::to($user->email)->send(new WelcomeMail($user));
+            Mail::to($user->email)->queue(new WelcomeMail($user));
         } catch (\Exception $e) {
             Log::error('Register Mail sending failed: '.$e->getMessage());
         }
