@@ -17,10 +17,12 @@ class OrderCancelledMail extends Mailable
      * Create a new message instance.
      */
     public $order;
+    public $items;
 
-    public function __construct($order)
+    public function __construct($order, $items)
     {
         $this->order = $order;
+        $this->items = $items;
     }
 
     public function build()

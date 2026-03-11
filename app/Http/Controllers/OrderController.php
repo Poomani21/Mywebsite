@@ -123,10 +123,12 @@ class OrderController extends Controller
             // Send SMS
             OrderNotificationService::sendSMS($mobile, $smsMessage);
 
+            $items = $order->items ?? [];
+            
             // Send Email
             try {
                 Mail::to(Auth::user()->email)
-                ->send(new OrderCancelledMail($order));
+                ->send(new OrderCancelledMail($order,$items));
             } catch (\Exception $e) {
                 Log::error('Order Cancel Mail sending failed: '.$e->getMessage());
             }

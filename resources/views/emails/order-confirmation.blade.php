@@ -95,7 +95,7 @@ box-shadow:0 3px 8px rgba(0,0,0,0.2);
                                     <tr style="border-bottom:1px solid #eee">
 
                                         <td width="90">
-                                            <img src="{{ url('storage/products/' . $item['image']) }}"
+                                            <img src="{{ asset('images/' . $item['image']) }}"  alt="{{ $item['name'] }}"
                                                 style="width:80px;border-radius:5px">
                                         </td>
 
