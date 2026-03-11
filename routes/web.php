@@ -147,8 +147,8 @@ Route::get('/testsms', function () {
 Route::get('/test-mail', function () {
 
     Mail::raw('Test Mail from Render', function ($message) {
-        // $message->to('poomanis@webwings.co.in')
-        $message->to('spoomani21@gmail.com')
+        $message->to('poomanis@webwings.co.in')
+        // $message->to('spoomani21@gmail.com')
                 ->subject('Render Mail Test');
     });
 
