@@ -25,9 +25,6 @@ EXPOSE 10000
 
  CMD php artisan key:generate --force \
  && php artisan config:clear \
- && php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache \
  && php artisan storage:link || true \
  && chmod -R 775 storage \
  && chmod -R 775 public/storage \
