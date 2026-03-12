@@ -185,6 +185,3 @@ Route::get('/test-mail', function () {
 
 });
 
-Route::get('/check-key', function () {
-    return env('BREVO_API_KEY');
-});

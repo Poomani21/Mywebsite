@@ -14,6 +14,7 @@ use App\Helpers\DeviceLocationHelper;
 use App\Jobs\SendWelcomeEmail;
 use App\Mail\PasswordResetMail;
 use App\Mail\WelcomeMail;
+use App\Services\BrevoMail;
 use MongoDB\BSON\UTCDateTime;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -109,7 +110,12 @@ class AuthController extends Controller
             // Mail::to($user->email)->queue(new WelcomeMail($user));
             // Dispatch job instead of sending mail directly
             // SendWelcomeEmail::dispatch($user);
-            Mail::to($user->email)->send(new WelcomeMail($user));
+            // Mail::to($user->email)->send(new WelcomeMail($user));
+            BrevoMail::send(
+                $user->email,
+                "Welcome to Our Website",
+                view('emails.welcome', compact('user'))->render()
+            );
         } catch (\Exception $e) {
             Log::error('Register Mail sending failed: '.$e->getMessage());
         }
@@ -191,7 +197,14 @@ class AuthController extends Controller
         
         // send reset confirmation email
         try {
-            Mail::to($user->email)->send(new PasswordResetMail($user));
+            // Mail::to($user->email)->send(new PasswordResetMail($user));
+
+            BrevoMail::send(
+                $user->email,
+                "Your Password Has Been Reset",
+                view('emails.password_reset', compact('user'))->render()
+            );
+
         } catch (\Exception $e) {
             Log::error('Forgot Password Mail sending failed: '.$e->getMessage());
         }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\BrevoMail;
 use App\Services\OrderNotificationService;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -127,8 +128,21 @@ class OrderController extends Controller
             
             // Send Email
             try {
-                Mail::to(Auth::user()->email)
-                ->send(new OrderCancelledMail($order,$items));
+                // Mail::to(Auth::user()->email)
+                // ->send(new OrderCancelledMail($order,$items));
+
+                $user = Auth::user();
+
+                BrevoMail::send(
+                    $user->email,
+                    'Your Order Cancelled - ' . $order->order_number,
+                    view('emails.order-cancelled', [
+                        'order' => $order,
+                        'items' => $items,
+                        'user'  => $user
+                    ])->render()
+                );
+
             } catch (\Exception $e) {
                 Log::error('Order Cancel Mail sending failed: '.$e->getMessage());
             }

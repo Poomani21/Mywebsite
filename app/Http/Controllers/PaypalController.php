@@ -13,6 +13,7 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Illuminate\Support\Facades\Redirect;
 use MongoDB\BSON\ObjectId;
 use App\Models\Address as ModelsAddress;
+use App\Services\BrevoMail;
 use App\Services\OrderNotificationService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -236,8 +237,22 @@ class PaypalController extends Controller
 
 
         try {
-            Mail::to(Auth::user()->email)
-            ->send(new OrderConfirmationMail($order, $items));
+            
+            // Mail::to(Auth::user()->email)
+            // ->send(new OrderConfirmationMail($order, $items));
+
+            $user = Auth::user();
+
+            BrevoMail::send(
+                $user->email,
+                'Your Order Confirmation - ' . $order->order_number,
+                view('emails.order-confirmation', [
+                    'order' => $order,
+                    'items' => $items,
+                    'user'  => $user
+                ])->render()
+            );
+
         } catch (\Exception $e) {
             Log::error('PayPal Mail sending failed: '.$e->getMessage());
         }
@@ -467,8 +482,20 @@ class PaypalController extends Controller
 
 
         try {
-            Mail::to(Auth::user()->email)
-            ->send(new OrderConfirmationMail($order, $items));
+            // Mail::to(Auth::user()->email)
+            // ->send(new OrderConfirmationMail($order, $items));
+            $user = Auth::user();
+
+            BrevoMail::send(
+                $user->email,
+                'Your Order Confirmation - ' . $order->order_number,
+                view('emails.order-confirmation', [
+                    'order' => $order,
+                    'items' => $items,
+                    'user'  => $user
+                ])->render()
+            );
+            
         } catch (\Exception $e) {
             Log::error('Stripe Payment Mail sending failed: '.$e->getMessage());
         }
