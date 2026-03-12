@@ -46,6 +46,8 @@ return [
         'token' => env('WHATSAPP_TOKEN'),
         'phone_id' => env('WHATSAPP_PHONE_ID'),
     ],
-
+    'brevo' => [
+        'key' => env('BREVO_API_KEY'),
+    ],
 
 ];

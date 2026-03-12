@@ -159,16 +159,16 @@ Route::get('/testsms', function () {
 Route::get('/test-mail', function () {
 
     $config = Configuration::getDefaultConfiguration()
-        ->setApiKey('api-key', env('BREVO_API_KEY'));
+        ->setApiKey('api-key', config('services.brevo.key'));
 
     $apiInstance = new TransactionalEmailsApi(
         new Client(),
         $config
     );
 
-    $sendSmtpEmail = new \Brevo\Client\Model\SendSmtpEmail([
+    $email = new \Brevo\Client\Model\SendSmtpEmail([
         'subject' => 'Render Mail Test',
-        'htmlContent' => '<h1>Mail from Render Server</h1>',
+        'htmlContent' => '<h2>Email working from Render</h2>',
         'sender' => [
             'name' => 'MyWebsite',
             'email' => 'spoomani21@gmail.com'
@@ -178,9 +178,13 @@ Route::get('/test-mail', function () {
         ]
     ]);
 
-    $apiInstance->sendTransacEmail($sendSmtpEmail);
+    $apiInstance->sendTransacEmail($email);
 
     return "Mail Sent Successfully";
 });
 
+});
+
+Route::get('/check-key', function () {
+    return env('BREVO_API_KEY');
 });
