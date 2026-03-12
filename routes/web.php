@@ -9,7 +9,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Mail;
-
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\Configuration;
+use GuzzleHttp\Client;
 //Auth routes
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
@@ -144,15 +146,41 @@ Route::get('/testsms', function () {
     );
 });
 
+// Route::get('/test-mail', function () {
+
+//     Mail::raw('Test Mail from Render', function ($message) {
+//         $message->to('poomanis@webwings.co.in')
+//         // $message->to('spoomani21@gmail.com')
+//                 ->subject('Render Mail Test');
+//     });
+
+//     return "Mail Sent";
+// });
 Route::get('/test-mail', function () {
 
-    Mail::raw('Test Mail from Render', function ($message) {
-        $message->to('poomanis@webwings.co.in')
-        // $message->to('spoomani21@gmail.com')
-                ->subject('Render Mail Test');
-    });
+    $config = Configuration::getDefaultConfiguration()
+        ->setApiKey('api-key', env('BREVO_API_KEY'));
 
-    return "Mail Sent";
+    $apiInstance = new TransactionalEmailsApi(
+        new Client(),
+        $config
+    );
+
+    $sendSmtpEmail = new \Brevo\Client\Model\SendSmtpEmail([
+        'subject' => 'Render Mail Test',
+        'htmlContent' => '<h1>Mail from Render Server</h1>',
+        'sender' => [
+            'name' => 'MyWebsite',
+            'email' => 'spoomani21@gmail.com'
+        ],
+        'to' => [
+            ['email' => 'poomanis@webwings.co.in']
+        ]
+    ]);
+
+    $apiInstance->sendTransacEmail($sendSmtpEmail);
+
+    return "Mail Sent Successfully";
 });
 
 });
