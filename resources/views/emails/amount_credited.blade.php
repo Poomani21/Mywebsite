@@ -25,7 +25,7 @@
                                             height="40">
                                     </td>
                                     <td align="right" style="font-size:18px;font-weight:bold;">
-                                        {{ env('APP_NAME') }} Pvt Ltd
+                                        {{ config('app.name') }} Pvt Ltd
                                     </td>
                                 </tr>
                             </table>
@@ -96,7 +96,7 @@
                             immediately.<br><br>
 
                             Regards,<br>
-                            <b>{{ env('APP_NAME') }} Pvt Ltd</b>
+                            <b>{{ config('app.name') }} Pvt Ltd</b>
 
                         </td>
                     </tr>

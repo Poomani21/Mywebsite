@@ -16,7 +16,7 @@
                             <img src="{{ url('images/Copilot_20260309_145910.png') }}"
                                 style="width:130px;margin-bottom:10px">
 
-                            <h2 style="margin:0;color:#000">{{ env('APP_NAME') }}</h2>
+                            <h2 style="margin:0;color:#000">{{ config('app.name') }}</h2>
 
                         </td>
                     </tr>
@@ -29,7 +29,7 @@
 
                             <p>Hello {{ $order->shipping_address['name'] }},</p>
 
-                            <p>Thank you for shopping with <b>{{ env('APP_NAME') }}</b>.
+                            <p>Thank you for shopping with <b>{{ config('app.name') }}</b>.
                                 Your order has been successfully placed.</p>
 
                         </td>
@@ -142,7 +142,7 @@ box-shadow:0 3px 8px rgba(0,0,0,0.2);
                             <img src="{{ url('images/Copilot_20260309_145910.png') }}"
                                 style="width:70px;margin-bottom:8px"><br>
 
-                            © {{ date('Y') }} {{ env('APP_NAME') }}. All rights reserved.
+                            © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
 
                         </td>
                     </tr>

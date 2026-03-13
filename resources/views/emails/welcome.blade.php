@@ -16,7 +16,7 @@
                                  alt="Logo"
                                  style="width:120px;margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;">
                         
-                            <h2 style="margin:0;color:#000;">{{ env('APP_NAME') }}</h2>
+                            <h2 style="margin:0;color:#000;">{{ config('app.name') }}</h2>
                         
                         </td>
                     </tr>
