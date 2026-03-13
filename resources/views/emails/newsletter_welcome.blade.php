@@ -10,7 +10,7 @@
 
                 <img src="{{ asset('images/Copilot_20260309_145910.png') }}" height="60">
 
-                <h2>Welcome to {{ env('APP_NAME') }}</h2>
+                <h2>Welcome to MyWebsite</h2>
 
                 <p>Thank you for subscribing to our newsletter.</p>
 
@@ -22,7 +22,7 @@
                     <li>Exclusive Discounts</li>
                 </ul>
 
-                <a href="{{ url('/') }}"
+                <a href="{{ route('products.list') }}"
                     style="background:#ffc107;padding:12px 25px;text-decoration:none;border-radius:4px;font-weight:bold">
                     Visit Website
                 </a>

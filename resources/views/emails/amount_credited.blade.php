@@ -59,13 +59,13 @@
 
                                 <tr style="background:#f5f7fa;">
                                     <td width="40%">Transaction ID</td>
-                                    <td>{{ $order->id ?? 'NA' }}</td>
+                                    <td>{{  $order->stripe_payment_id ?? $order->paypal_order_id ?? $order->id ?? 'NA' }}</td>
                                 </tr>
 
                                 <tr>
                                     <td>Amount</td>
                                     <td style="font-weight:bold;color:#0a8f3d;">
-                                        ₹{{ number_format($order->amount ?? 0, 2) }}</td>
+                                        ₹{{ number_format($order->total_amount ?? 0, 2) }}</td>
                                 </tr>
 
                                 <tr style="background:#f5f7fa;">

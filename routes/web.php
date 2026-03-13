@@ -44,7 +44,7 @@ Route::view('/cancellation', 'pages.cancellation')->name('cancellation');
 Route::view('/returns', 'pages.returns')->name('returns');
 Route::view('/about-us', 'pages.about')->name('about');
 Route::view('/contact-us', 'pages.contact')->name('contact');
-
+Route::post('/newsletter-subscribe', [NewsletterController::class,'subscribe'])->name('newsletter.subscribe');
 
 
 
@@ -196,5 +196,5 @@ Route::get('/test-mail', function () {
 
 });
 
-Route::post('/newsletter-subscribe', [NewsletterController::class,'subscribe'])->name('newsletter.subscribe');
+
 
