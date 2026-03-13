@@ -10,7 +10,7 @@
 
                 <img src="{{ asset('images/Copilot_20260309_145910.png') }}" height="60">
 
-                <h2>Welcome to {{ config('app.name') }}</h2>
+                <h2>Welcome to {{ env('APP_NAME') }}</h2>
 
                 <p>Thank you for subscribing to our newsletter.</p>
 

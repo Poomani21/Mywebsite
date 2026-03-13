@@ -24,7 +24,7 @@
                                         <img src="{{ asset('images/Copilot_20260309_145910.png') }}" height="40">
                                     </td>
                                     <td align="right" style="font-size:18px;font-weight:bold;">
-                                        {{ config('app.name') }} Pvt Ltd
+                                        {{ env('APP_NAME') }} Pvt Ltd
                                     </td>
                                 </tr>
                             </table>
@@ -95,7 +95,7 @@
                             immediately.<br><br>
 
                             Regards,<br>
-                            <b>{{ config('app.name') }} Pvt Ltd</b>
+                            <b>{{ env('APP_NAME') }} Pvt Ltd</b>
 
                         </td>
                     </tr>

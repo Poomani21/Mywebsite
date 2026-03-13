@@ -16,7 +16,7 @@
                             <img src="{{ url('images/Copilot_20260309_145910.png') }}"
                                 style="width:120px;margin-bottom:10px">
 
-                            <h2 style="margin:0;color:#000">{{ config('app.name') }}</h2>
+                            <h2 style="margin:0;color:#000">{{ env('APP_NAME') }}</h2>
 
                         </td>
                     </tr>
@@ -124,7 +124,7 @@ font-weight:bold;
                             <img src="{{ url('images/Copilot_20260309_145910.png') }}"
                                 style="width:70px;margin-bottom:8px"><br>
 
-                            © {{ date('Y') }} {{ config('app.name') }}
+                            © {{ date('Y') }} {{ env('APP_NAME') }}
 
                         </td>
                     </tr>
