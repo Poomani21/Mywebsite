@@ -256,7 +256,18 @@
                 My Orders List
             @endif
           </a>
-        </li>        
+        </li>  
+        
+        @if(auth()->check() && auth()->user()->role === 'Admin')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('users.index') }}">User List</a>
+            </li>
+        @endif
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('account.info') }}">My Account Info</a>
+        </li>
+
       </ul>
 
       <!-- User Avatar on top-right corner -->

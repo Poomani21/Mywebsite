@@ -96,10 +96,16 @@
       <div class="col-12 col-md-6 col-lg-3 mb-4">
         <h6 class="footer-title">Stay Connected</h6>
         <p class="footer-text small">Get updates on offers & new products</p>
-        <div class="input-group footer-newsletter">
-          <input type="email" class="form-control" placeholder="Enter your email">
-          <button class="btn btn-warning" type="button">Subscribe</button>
-        </div>
+    
+        <form action="{{ route('newsletter.subscribe') }}" method="POST">
+            @csrf
+    
+            <div class="input-group footer-newsletter">
+                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                <button class="btn btn-warning" type="submit">Subscribe</button>
+            </div>
+    
+        </form>
       </div>
 
     </div>

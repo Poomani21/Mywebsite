@@ -5,9 +5,11 @@ use App\Http\Controllers\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Mail;
 use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\Configuration;
@@ -139,6 +141,15 @@ Route::post('accountInfo/update', [AccountController::class, 'update'])->name('a
 Route::delete('accountInfo/delete', [AccountController::class, 'destroy'])->name('account.delete');
 
 
+//User Controller
+
+Route::get('users',[UserController::class,'index'])->name('users.index');
+Route::get('users-list',[UserController::class,'usersList'])->name('users.list');
+Route::get('user-detail/{id}',[UserController::class,'userDetail'])->name('users.detail');
+Route::delete('user-delete/{id}',[UserController::class,'destroy'])->name('users.delete');
+Route::post('/users/bulk-delete',[UserController::class,'bulkDelete'])->name('users.bulkDelete');
+Route::get('/users/export',[UserController::class,'exportUsers'])->name('users.export');
+
 Route::get('/testsms', function () {
     \App\Services\OrderNotificationService::sendSMS(
         '9578777149',
@@ -184,4 +195,6 @@ Route::get('/test-mail', function () {
 });
 
 });
+
+Route::post('/newsletter-subscribe', [NewsletterController::class,'subscribe'])->name('newsletter.subscribe');
 

@@ -253,6 +253,17 @@ class PaypalController extends Controller
                 ])->render()
             );
 
+
+            BrevoMail::send(
+                $user->email,
+                'UPI Debit Transaction Alert',
+                view('emails.amount_debited', [
+                    'order' => $order,
+                    'items' => $items ?? [],
+                    'user'  => $user
+                ])->render()
+            );
+
         } catch (\Exception $e) {
             Log::error('PayPal Mail sending failed: '.$e->getMessage());
         }
@@ -495,7 +506,18 @@ class PaypalController extends Controller
                     'user'  => $user
                 ])->render()
             );
-            
+
+            BrevoMail::send(
+                $user->email,
+                'UPI Debit Transaction Alert',
+                view('emails.amount_debited', [
+                    'order' => $order,
+                    'items' => $items ?? [],
+                    'user'  => $user
+                ])->render()
+            );
+
+
         } catch (\Exception $e) {
             Log::error('Stripe Payment Mail sending failed: '.$e->getMessage());
         }

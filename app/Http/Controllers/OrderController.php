@@ -143,6 +143,17 @@ class OrderController extends Controller
                     ])->render()
                 );
 
+                BrevoMail::send(
+                    $user->email,
+                    'UPI Transaction Alert',
+                    view('emails.amount_credited', [
+                        'order' => $order,
+                        'items' => $items ?? [],
+                        'user'  => $user
+                    ])->render()
+                );
+                
+
             } catch (\Exception $e) {
                 Log::error('Order Cancel Mail sending failed: '.$e->getMessage());
             }
