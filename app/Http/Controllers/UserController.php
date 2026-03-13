@@ -16,27 +16,42 @@ class UserController extends Controller
     public function usersList(Request $request)
     {
 
-        $columns = ['name', 'email', 'phone', 'role', 'created_at'];
+        $columns = [
+            0 => null,
+            1 => null,
+            2 => 'name',
+            3 => 'email',
+            4 => 'phone',
+            5 => 'role',
+            6 => 'created_at',
+            7 => null
+        ];
 
         $query = User::query();
 
         if ($request->search['value']) {
+
             $search = $request->search['value'];
 
             $query->where(function ($q) use ($search) {
+
                 $q->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('phone', 'like', "%$search%");
+                ->orWhere('email', 'like', "%$search%")
+                ->orWhere('phone', 'like', "%$search%");
             });
         }
 
         $totalData = $query->count();
 
-        $orderColumn = $columns[$request->order[0]['column']];
+        $orderColumnIndex = $request->order[0]['column'];
+        $orderColumn = $columns[$orderColumnIndex] ?? 'created_at';
         $orderDir = $request->order[0]['dir'];
 
+        if ($orderColumn) {
+            $query->orderBy($orderColumn, $orderDir);
+        }
+
         $users = $query
-            ->orderBy($orderColumn, $orderDir)
             ->skip($request->start)
             ->take($request->length)
             ->get();
@@ -54,17 +69,9 @@ class UserController extends Controller
                 'image' => "<img src='$image' width='42' height='42' style='object-fit:cover' class='rounded-circle'>",
 
                 'name' => $user->name,
-
                 'email' => $user->email,
-
                 'phone' => $user->phone,
-
                 'role' => $user->role,
-
-                'login' => $user->login_device['browser'] ?? '',
-
-                'location' => ($user->login_device['city'] ?? '') . ',' .
-                    ($user->login_device['country'] ?? ''),
 
                 'created_at' => $user->created_at->format('d M Y'),
 
@@ -83,7 +90,7 @@ class UserController extends Controller
         }
 
         return response()->json([
-            "draw" => $request->draw,
+            "draw" => intval($request->draw),
             "recordsTotal" => $totalData,
             "recordsFiltered" => $totalData,
             "data" => $data
